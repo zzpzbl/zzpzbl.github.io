@@ -7,12 +7,12 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>Hexo</title>
+<title>Tag: Algorithm - Hexo</title>
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/index.html">
+<meta property="og:url" content="http://yoursite.com/tags/Algorithm/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
@@ -87,7 +87,7 @@
             
             <div class="navbar-start">
                 
-                <a class="navbar-item is-active"
+                <a class="navbar-item"
                 href="/">Home</a>
                 
                 <a class="navbar-item"
@@ -128,7 +128,17 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/tags">Tags</a></li>
+            <li class="is-active"><a href="#" aria-current="page">Algorithm</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
     
 <div class="card">
     
@@ -184,53 +194,6 @@
 <figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><bits/stdc++.h></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mk make_pair</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pb push_back</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pii pair<span class="hljs-meta-string"><int, int></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> fir first</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> sec second</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ArrayDebug(a, l, r) for(int i = l; i <= r; ++i) printf(<span class="hljs-meta-string">"%d%c"</span>, a[i], (i==r)?<span class="hljs-meta-string">'\n'</span>:<span class="hljs-meta-string">' '</span>)</span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">1e5</span>+<span class="hljs-number">7</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> LL mod = <span class="hljs-number">1e9</span>+<span class="hljs-number">7</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> PI = <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>);</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> EPS = <span class="hljs-number">1e-6</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dx[] = {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">1</span>};</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dy[] = {<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>};</span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line">LL n, k;</span><br><span class="line">LL a[maxn], ans;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-built_in">cin</span> >> n >> k;</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= n; ++i) <span class="hljs-built_in">cin</span> >> a[i];</span><br><span class="line">    sort(a + <span class="hljs-number">1</span>, a + <span class="hljs-number">1</span> + n);</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= n / <span class="hljs-number">2</span>; ++i) {</span><br><span class="line">        <span class="hljs-keyword">int</span> j = n - i + <span class="hljs-number">1</span>;</span><br><span class="line">        LL x = (a[i + <span class="hljs-number">1</span>] - a[i] + a[j] - a[j - <span class="hljs-number">1</span>]) * i;</span><br><span class="line">        <span class="hljs-keyword">if</span>(x <= k) k -= x;</span><br><span class="line">        <span class="hljs-keyword">else</span> {</span><br><span class="line">            ans = a[j] - a[i] - k / i;</span><br><span class="line">            <span class="hljs-keyword">break</span>;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="hljs-built_in">cout</span> << ans << <span class="hljs-built_in">endl</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
 
 <p>思路 $2$：二分+单调队列：待补。</p>
-</body></html>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-    
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-06-17T11:25:25.000Z">2020-06-17</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Essay/">Essay</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    a minute read (About 148 words)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2020/06/17/%E6%AD%A3%E7%A1%AE%E9%85%8D%E7%BD%AEhexo%E7%8E%AF%E5%A2%83%E5%8F%98%E9%87%8F/">正确配置hexo环境变量</a>
-            
-        </h1>
-        <div class="content">
-            <html><head></head><body><p>最近在 $windows$ 上搭建了 $Hexo$ 博客，出师未捷身先死吧，在配置环境变量的时候总是出问题，看了好几篇别人的博客也无济于事。最后我想，要使用 $Hexo$ 指令，应该是将一个带有 $.exe$ 后缀的文件路径加入到 $Path$ 中，于是我使用万能的 $Everything$ 搜索了 $hexo$，于是找到了 $hexo.cmd$<br><img src="https://gitee.com/lengpi/blog/raw/master/test/test.png" alt><br>$Windows$ 用户应该只要将这个路径加入到系统变量中的 $Path$ 即可正常使用了。</p>
 </body></html>
         </div>
         
