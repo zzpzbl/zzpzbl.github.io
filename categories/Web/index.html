@@ -7,19 +7,16 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>Categories - Hexo</title>
+<title>Category: Web - Hexo</title>
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/categories/index.html">
+<meta property="og:url" content="http://yoursite.com/categories/Web/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Environment configuration">
-<meta property="article:tag" content="Algorithm">
-<meta property="article:tag" content="JS">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
@@ -96,7 +93,7 @@
                 <a class="navbar-item"
                 href="/archives">Archives</a>
                 
-                <a class="navbar-item is-active"
+                <a class="navbar-item"
                 href="/categories">Categories</a>
                 
                 <a class="navbar-item"
@@ -131,51 +128,97 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-<div class="card widget">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                Categories
-            </h3>
-            <ul class="menu-list">
-            <li>
-        <a class="level is-marginless" href="/categories/ACM/">
-            <span class="level-start">
-                <span class="level-item">ACM</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">4</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/Essay/">
-            <span class="level-start">
-                <span class="level-item">Essay</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/UML/">
-            <span class="level-start">
-                <span class="level-item">UML</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">3</span>
-            </span>
-        </a></li><li>
-        <a class="level is-marginless" href="/categories/Web/">
-            <span class="level-start">
-                <span class="level-item">Web</span>
-            </span>
-            <span class="level-end">
-                <span class="level-item tag">1</span>
-            </span>
-        </a></li>
-            </ul>
-        </div>
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/categories">Categories</a></li>
+            
+            <li class="is-active"><a href="#" aria-current="page">Web</a></li>
+        </ul>
+        </nav>
     </div>
-</div></div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-09-15T08:37:30.000Z">2020-09-15</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web/">Web</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 minutes read (About 1009 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/">嵌套函数和闭包</a>
+            
+        </h1>
+        <div class="content">
+            <html><head></head><body><h1 id="嵌套函数和闭包"><a href="#嵌套函数和闭包" class="headerlink" title="嵌套函数和闭包"></a>嵌套函数和闭包</h1><p>在 JS 中，可以在一个函数中嵌套另一个函数，内部函数对外部函数是私有的。它自身也形成了一个闭包，这意味着它自身可以拥有独立的环境与变量表达式。</p>
+<p>一个嵌套（内部）函数可以“继承”容器（外部）函数的参数和变量，也就是说，内部函数包含外部函数的作用域。</p>
+<ul>
+<li>内部函数只能在外部函数中访问</li>
+<li>内部函数形成了一个闭包：他可以访问外部函数的参数和变量，但外部函数却不能使用它的变量和参数。</li>
+</ul>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">addSquares</span>(<span class="hljs-params">a, b</span>) </span>{</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">square</span>(<span class="hljs-params">x</span>) </span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> x * x;</span><br><span class="line">  }</span><br><span class="line">  <span class="hljs-keyword">return</span> square(a) + square(b);</span><br><span class="line">}</span><br><span class="line">a = addSquares(<span class="hljs-number">2</span>, <span class="hljs-number">3</span>); <span class="hljs-comment">// returns 13</span></span><br><span class="line">b = addSquares(<span class="hljs-number">3</span>, <span class="hljs-number">4</span>); <span class="hljs-comment">// returns 25</span></span><br><span class="line">c = addSquares(<span class="hljs-number">4</span>, <span class="hljs-number">5</span>); <span class="hljs-comment">// returns 41</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>由于内部函数形成了闭包，因此你可以调用外部函数并为外部函数和内部函数指定参数</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">outside</span>(<span class="hljs-params">x</span>) </span>{</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inside</span>(<span class="hljs-params">y</span>) </span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> x + y;</span><br><span class="line">  }</span><br><span class="line">  <span class="hljs-keyword">return</span> inside;</span><br><span class="line">}</span><br><span class="line">fn_inside = outside(<span class="hljs-number">3</span>); <span class="hljs-comment">// 可以这样想：给一个函数，使它的值加3，fn_inside 成为了一个函数</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(fn_inside);</span><br><span class="line"></span><br><span class="line">result = fn_inside(<span class="hljs-number">5</span>); <span class="hljs-comment">// returns 8</span></span><br><span class="line"></span><br><span class="line">result1 = outside(<span class="hljs-number">3</span>)(<span class="hljs-number">5</span>); <span class="hljs-comment">// returns 8</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(result);</span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="保存变量"><a href="#保存变量" class="headerlink" title="保存变量"></a>保存变量</h2><p>一个闭包必须保存它可见作用域中所有参数和变量。因为每一次调用传入的参数都可能不同，每一次对外部函数的调用实际上重新创建了一遍这个闭包，只有当返回的 <code>inside</code> 没有再次被引用时，内存才会释放。</p>
+<h2 id="多层嵌套函数"><a href="#多层嵌套函数" class="headerlink" title="多层嵌套函数"></a>多层嵌套函数</h2><p>函数可以被多层嵌套，因此，闭包可以包含多个作用域；他们递归式的包含了所有包含它的函数作用域，这个称之为作用域链。</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">A</span>(<span class="hljs-params">x</span>) </span>{</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">B</span>(<span class="hljs-params">y</span>) </span>{</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-number">111</span>);</span><br><span class="line">    <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">C</span>(<span class="hljs-params">z</span>) </span>{</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(x + y + z);</span><br><span class="line">    }</span><br><span class="line">    C(<span class="hljs-number">3</span>);</span><br><span class="line">  }</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">333</span>);</span><br><span class="line">  B(<span class="hljs-number">2</span>);</span><br><span class="line">  <span class="hljs-built_in">console</span>.log(<span class="hljs-number">222</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">A(<span class="hljs-number">1</span>); <span class="hljs-comment">// logs 6 (1 + 2 + 3)</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>输出结果：</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-number">333</span></span><br><span class="line"><span class="hljs-number">111</span></span><br><span class="line"><span class="hljs-number">6</span></span><br><span class="line"><span class="hljs-number">222</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="命名冲突"><a href="#命名冲突" class="headerlink" title="命名冲突"></a>命名冲突</h2><p>当同一个闭包作用域下两个参数或者变量同名时，就会产生命名冲突。更近的作用域有更高的优先权，所以最近的优先级最高，最远的优先级最低。这就是作用域链。链的第一个元素就是最里面的作用域，最后一个元素便是最外层的作用域。</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">outside</span>(<span class="hljs-params"></span>) </span>{</span><br><span class="line">  <span class="hljs-keyword">var</span> x = <span class="hljs-number">5</span>;</span><br><span class="line">  <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">inside</span>(<span class="hljs-params">x</span>) </span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> x * <span class="hljs-number">2</span>;</span><br><span class="line">  }</span><br><span class="line">  <span class="hljs-keyword">return</span> inside;</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line">outside()(<span class="hljs-number">10</span>); <span class="hljs-comment">// returns 20 instead of 10</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="闭包"><a href="#闭包" class="headerlink" title="闭包"></a>闭包</h1><p>闭包是 JavaScript 最强大的特性之一。当内部函数的生存周期大于外部函数时，外部函数中的定义的变量和函数的生存周期将比内部函数执行时间长。当内部函数以某一种方式被任何一个外部函数作用域访问时，一个闭包就产生了。</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> pet = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name</span>) </span>{          <span class="hljs-comment">//外部函数定义了一个变量"name"</span></span><br><span class="line">  <span class="hljs-keyword">var</span> getName = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{            </span><br><span class="line">    <span class="hljs-comment">//内部函数可以访问 外部函数定义的"name"</span></span><br><span class="line">    <span class="hljs-keyword">return</span> name; </span><br><span class="line">  }</span><br><span class="line">  <span class="hljs-comment">//返回这个内部函数，从而将其暴露在外部函数作用域</span></span><br><span class="line">  <span class="hljs-keyword">return</span> getName;               </span><br><span class="line">};</span><br><span class="line">myPet = pet(<span class="hljs-string">"Vivie"</span>);</span><br><span class="line">    </span><br><span class="line">myPet();                            <span class="hljs-comment">// 返回结果 "Vivie"</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="使用-arguments-对象"><a href="#使用-arguments-对象" class="headerlink" title="使用 arguments 对象"></a>使用 arguments 对象</h1><p>函数的实际参数会被保存在一个类似数组的 arguments 对象中。</p>
+<p>使用 arguments 对象，你可以处理比声明的更多的参数来调用函数。这在你事先不知道会需要将多少参数传递给函数时十分有用。</p>
+<p>例如下面这个链接字符串的函数</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">myConcat</span>(<span class="hljs-params">separator</span>) </span>{</span><br><span class="line">   <span class="hljs-keyword">var</span> result = <span class="hljs-string">''</span>; <span class="hljs-comment">// 把值初始化成一个字符串，这样就可以用来保存字符串了！！</span></span><br><span class="line">   <span class="hljs-keyword">var</span> i;</span><br><span class="line">   <span class="hljs-comment">// iterate through arguments</span></span><br><span class="line">   <span class="hljs-keyword">for</span> (i = <span class="hljs-number">1</span>; i < <span class="hljs-built_in">arguments</span>.length; i++) {</span><br><span class="line">      result += <span class="hljs-built_in">arguments</span>[i] + separator;</span><br><span class="line">   }</span><br><span class="line">   <span class="hljs-keyword">return</span> result;</span><br><span class="line">}</span><br><span class="line"><span class="hljs-comment">// returns "red, orange, blue, "</span></span><br><span class="line">myConcat(<span class="hljs-string">", "</span>, <span class="hljs-string">"red"</span>, <span class="hljs-string">"orange"</span>, <span class="hljs-string">"blue"</span>);</span><br></pre></td></tr></tbody></table></figure>
+
+<h1 id="函数参数"><a href="#函数参数" class="headerlink" title="函数参数"></a>函数参数</h1><h2 id="默认参数"><a href="#默认参数" class="headerlink" title="默认参数"></a>默认参数</h2><p>在 JavaScript 中，函数参数的默认值是 <code>undefined</code>。</p>
+<h2 id="剩余参数"><a href="#剩余参数" class="headerlink" title="剩余参数"></a>剩余参数</h2><p>剩余参数语法允许将不确定的参数表示为数组</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">multiply</span>(<span class="hljs-params">multiplier, ...theArgs</span>) </span>{</span><br><span class="line">  <span class="hljs-keyword">return</span> theArgs.map(<span class="hljs-function"><span class="hljs-params">x</span> =></span> multiplier * x);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> arr = multiply(<span class="hljs-number">2</span>, <span class="hljs-number">1</span>, <span class="hljs-number">2</span>, <span class="hljs-number">3</span>);</span><br><span class="line"><span class="hljs-built_in">console</span>.log(arr); <span class="hljs-comment">// [2, 4, 6]</span></span><br></pre></td></tr></tbody></table></figure>
+</body></html>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
                 
 
 
