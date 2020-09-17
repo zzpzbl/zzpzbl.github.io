@@ -136,6 +136,71 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2020-06-29T10:41:50.000Z">2020-06-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/ACM/">ACM</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 minutes read (About 1364 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2020/06/29/%E6%9A%91%E6%9C%9F%E8%87%AA%E8%AE%AD2/">暑期自训2</a>
+            
+        </h1>
+        <div class="content">
+            <html><head></head><body><h1 id><a href="#" class="headerlink" title></a></h1><h2 id="A-CF1277C"><a href="#A-CF1277C" class="headerlink" title="$A.\ CF1277C$"></a>$A.\ CF1277C$</h2><p>题意：给你一串括号序列，你可以选择任意一端区间进行倒置。要将其变为正则的，并且前缀中有 $k$ 个正则的，给出变换序列。</p>
+<p>思路：先变为 $()()\cdots()$ 形式，然后从前往后进行合并。</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><bits/stdc++.h></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mk make_pair</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pb push_back</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pii pair<span class="hljs-meta-string"><int, int></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> fir first</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> sec second</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ArrayDebug(a, l, r) for(int i = l; i <= r; ++i) printf(<span class="hljs-meta-string">"%d%c"</span>, a[i], (i==r)?<span class="hljs-meta-string">'\n'</span>:<span class="hljs-meta-string">' '</span>)</span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">2e3</span>+<span class="hljs-number">7</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> LL mod = <span class="hljs-number">998244353</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> PI = <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>);</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> EPS = <span class="hljs-number">1e-6</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dx[] = {<span class="hljs-number">0</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">1</span>};</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dy[] = {<span class="hljs-number">-1</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>};</span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">int</span> t;</span><br><span class="line"><span class="hljs-keyword">int</span> k, n;</span><br><span class="line"><span class="hljs-keyword">char</span> s[maxn];</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-built_in">cin</span> >> t;</span><br><span class="line">    <span class="hljs-keyword">while</span>(t--) {</span><br><span class="line">        <span class="hljs-built_in">vector</span><pii> ans;</span><br><span class="line">        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>, &n, &k);</span><br><span class="line">        <span class="hljs-built_in">cin</span> >> s;</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i < n - <span class="hljs-number">1</span>; i += <span class="hljs-number">2</span>) {</span><br><span class="line">            <span class="hljs-keyword">if</span>(s[i] == <span class="hljs-string">'('</span> && s[i + <span class="hljs-number">1</span>] == <span class="hljs-string">')'</span>) <span class="hljs-keyword">continue</span>;</span><br><span class="line">            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(s[i] == <span class="hljs-string">'('</span> && s[i + <span class="hljs-number">1</span>] != <span class="hljs-string">')'</span>) {</span><br><span class="line">                <span class="hljs-keyword">int</span> j = i + <span class="hljs-number">2</span>;</span><br><span class="line">                <span class="hljs-keyword">while</span>(j < n && s[j] == <span class="hljs-string">'('</span>) ++j;</span><br><span class="line">                reverse(s + i + <span class="hljs-number">1</span>, s + j + <span class="hljs-number">1</span>);</span><br><span class="line">                ans.pb(mk(i + <span class="hljs-number">1</span>, j));</span><br><span class="line">            }</span><br><span class="line">            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span>(s[i] != <span class="hljs-string">'('</span>) {</span><br><span class="line">                <span class="hljs-keyword">int</span> j = i + <span class="hljs-number">1</span>;</span><br><span class="line">                <span class="hljs-keyword">while</span>(j < n && s[j] == <span class="hljs-string">')'</span>) ++j;</span><br><span class="line">                reverse(s + i, s + j + <span class="hljs-number">1</span>);</span><br><span class="line">                ans.pb(mk(i, j));</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="hljs-keyword">int</span> x = n / <span class="hljs-number">2</span> - k;</span><br><span class="line">        <span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>, cnt = <span class="hljs-number">1</span>;</span><br><span class="line">        <span class="hljs-keyword">while</span>(x--) {</span><br><span class="line">            ans.pb(mk(i, i + cnt));</span><br><span class="line">            i++;</span><br><span class="line">            cnt++;</span><br><span class="line">        }</span><br><span class="line">        <span class="hljs-built_in">cout</span> << ans.size() << <span class="hljs-built_in">endl</span>;</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> x : ans) <span class="hljs-built_in">cout</span> << x.fir + <span class="hljs-number">1</span> << <span class="hljs-string">' '</span> << x.sec + <span class="hljs-number">1</span><< <span class="hljs-built_in">endl</span>;</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/*</span></span><br><span class="line"><span class="hljs-comment">4</span></span><br><span class="line"><span class="hljs-comment">8 2</span></span><br><span class="line"><span class="hljs-comment">()(())()</span></span><br><span class="line"><span class="hljs-comment">10 3</span></span><br><span class="line"><span class="hljs-comment">))()()()((</span></span><br><span class="line"><span class="hljs-comment">2 1</span></span><br><span class="line"><span class="hljs-comment">()</span></span><br><span class="line"><span class="hljs-comment">2 1</span></span><br><span class="line"><span class="hljs-comment">)(</span></span><br><span class="line"><span class="hljs-comment">*/</span></span><br></pre></td></tr></tbody></table></figure></body></html>
+        </div>
+        
+        
+        <hr style="height:1px;margin:1rem 0"/>
+        <div class="level is-mobile is-flex">
+            <div class="level-start">
+                
+                <div class="level-item is-size-7 is-uppercase">
+                    <i class="fas fa-tags has-text-grey"></i>&nbsp;
+                    <a class="has-link-grey -link" href="/tags/Algorithm/" rel="tag">Algorithm</a>
+                </div>
+                
+            </div>
+            <div class="level-start">
+                <div class="level-item">
+                <a class="button is-size-7 is-light" href="/2020/06/29/%E6%9A%91%E6%9C%9F%E8%87%AA%E8%AE%AD2/#more">Read More</a>
+                </div>
+            </div>
+        </div>
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2020-06-25T11:25:25.000Z">2020-06-25</time>
                 
                 <div class="level-item">
@@ -311,7 +376,7 @@
                         Posts
                     </p>
                     <p class="title has-text-weight-normal">
-                        12
+                        13
                     </p>
                 </div>
             </div>
@@ -321,7 +386,7 @@
                         Categories
                     </p>
                     <p class="title has-text-weight-normal">
-                        4
+                        5
                     </p>
                 </div>
             </div>
@@ -331,7 +396,7 @@
                         Tags
                     </p>
                     <p class="title has-text-weight-normal">
-                        3
+                        4
                     </p>
                 </div>
             </div>
@@ -413,6 +478,14 @@
                 <span class="level-item tag">4</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/Client/">
+            <span class="level-start">
+                <span class="level-item">Client</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/Essay/">
             <span class="level-start">
                 <span class="level-item">Essay</span>
@@ -447,7 +520,7 @@
         <h3 class="menu-label">
             Tag Cloud
         </h3>
-        <a href="/tags/Algorithm/" style="font-size: 20px;">Algorithm</a> <a href="/tags/Environment-configuration/" style="font-size: 10px;">Environment configuration</a> <a href="/tags/JS/" style="font-size: 10px;">JS</a>
+        <a href="/tags/Algorithm/" style="font-size: 20px;">Algorithm</a> <a href="/tags/Environment-configuration/" style="font-size: 10px;">Environment configuration</a> <a href="/tags/JS/" style="font-size: 10px;">JS</a> <a href="/tags/electron/" style="font-size: 10px;">electron</a>
     </div>
 </div>
     
@@ -459,6 +532,25 @@
         <h3 class="menu-label">
             Recent
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2020/09/17/electron-ipcMain-md/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="electron-ipcMain.md">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-17T10:47:59.000Z">2020-09-17</time></div>
+                    <a href="/2020/09/17/electron-ipcMain-md/" class="title has-link-black-ter is-size-6 has-text-weight-normal">electron-ipcMain.md</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Client/">Client</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -536,25 +628,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A102/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="牛客多校02">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-21T09:15:40.000Z">2020-07-21</time></div>
-                    <a href="/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A102/" class="title has-link-black-ter is-size-6 has-text-weight-normal">牛客多校02</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/ACM/">ACM</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
         
@@ -572,7 +645,7 @@
                     <span class="level-item">September 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -629,6 +702,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JS/">
                         <span class="tag">JS</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/electron/">
+                        <span class="tag">electron</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -658,6 +738,25 @@
         
         <article class="media">
             
+            <a href="/2020/09/17/electron-ipcMain-md/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="electron-ipcMain.md">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-17T10:47:59.000Z">2020-09-17</time></div>
+                    <a href="/2020/09/17/electron-ipcMain-md/" class="title has-link-black-ter is-size-6 has-text-weight-normal">electron-ipcMain.md</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Client/">Client</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="嵌套函数和闭包">
@@ -732,25 +831,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A102/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="牛客多校02">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-07-21T09:15:40.000Z">2020-07-21</time></div>
-                    <a href="/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A102/" class="title has-link-black-ter is-size-6 has-text-weight-normal">牛客多校02</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/ACM/">ACM</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
     
@@ -768,7 +848,7 @@
                     <span class="level-item">September 2020</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">4</span>
+                    <span class="level-item tag">5</span>
                 </span>
             </a>
         </li>
@@ -825,6 +905,13 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/JS/">
                         <span class="tag">JS</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/electron/">
+                        <span class="tag">electron</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>

@@ -7,21 +7,21 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>牛客多校03 - Hexo</title>
+<title>electron-ipcMain.md - Hexo</title>
 
 
-    <meta name="description" content="$G\ Operating\ on\ a\ Graph$题意：给定一个图，$q$ 次询问，每次询问为一个颜色 $o$，若该图上存在颜色为 $o$ 的部分，则将与该部分相邻的点涂成颜色 $o$，问最后每个点是什么颜色。 思路：首先容易想到，这个题应该可以用并查集来维护颜色信息。很直观的做法是我们把该部分相连的每一个点都更改颜色，但这样很显然会超时。我们用 $vector[i]$ 来维护与 $i$ 相">
+    <meta name="description" content="ipcMain从主进程到渲染进程的异步通信。当在主进程中使用时，它处理从渲染进程（网页）发送出来的异步和同步信息。从渲染器进程发送的消息将发送到该模块。 发送消息也可以从主进程向渲染进程发送消息。  发送消息，事件名称为 channel 回复同步信息时，需要设置  event.returnValue 可以使用 event.sender.send() 将异步消息发回发送者。  例子： 1234567">
 <meta property="og:type" content="article">
-<meta property="og:title" content="牛客多校03">
-<meta property="og:url" content="http://yoursite.com/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A103/index.html">
+<meta property="og:title" content="electron-ipcMain.md">
+<meta property="og:url" content="http://yoursite.com/2020/09/17/electron-ipcMain-md/index.html">
 <meta property="og:site_name" content="Hexo">
-<meta property="og:description" content="$G\ Operating\ on\ a\ Graph$题意：给定一个图，$q$ 次询问，每次询问为一个颜色 $o$，若该图上存在颜色为 $o$ 的部分，则将与该部分相邻的点涂成颜色 $o$，问最后每个点是什么颜色。 思路：首先容易想到，这个题应该可以用并查集来维护颜色信息。很直观的做法是我们把该部分相连的每一个点都更改颜色，但这样很显然会超时。我们用 $vector[i]$ 来维护与 $i$ 相">
+<meta property="og:description" content="ipcMain从主进程到渲染进程的异步通信。当在主进程中使用时，它处理从渲染进程（网页）发送出来的异步和同步信息。从渲染器进程发送的消息将发送到该模块。 发送消息也可以从主进程向渲染进程发送消息。  发送消息，事件名称为 channel 回复同步信息时，需要设置  event.returnValue 可以使用 event.sender.send() 将异步消息发回发送者。  例子： 1234567">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
-<meta property="article:published_time" content="2020-07-21T08:56:06.000Z">
-<meta property="article:modified_time" content="2020-07-21T09:15:05.778Z">
+<meta property="article:published_time" content="2020-09-17T10:47:59.000Z">
+<meta property="article:modified_time" content="2020-09-17T14:57:33.477Z">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="Algorithm">
+<meta property="article:tag" content="electron">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
@@ -84,7 +84,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.jpg" alt="牛客多校03" height="28">
+                <img src="/images/logo.jpg" alt="electron-ipcMain.md" height="28">
             
             </a>
         </div>
@@ -144,17 +144,17 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-07-21T08:56:06.000Z">2020-07-21</time>
+                <time class="level-item has-text-grey" datetime="2020-09-17T10:47:59.000Z">2020-09-17</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/ACM/">ACM</a>
+                <a class="has-link-grey -link" href="/categories/Client/">Client</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3 minutes read (About 449 words)
+                    5 minutes read (About 742 words)
                 </span>
                 
                 
@@ -163,13 +163,97 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                牛客多校03
+                electron-ipcMain.md
             
         </h1>
         <div class="content">
-            <html><head></head><body><h1 id><a href="#" class="headerlink" title></a></h1><h2 id="G-Operating-on-a-Graph"><a href="#G-Operating-on-a-Graph" class="headerlink" title="$G\ Operating\ on\ a\ Graph$"></a>$G\ Operating\ on\ a\ Graph$</h2><p>题意：给定一个图，$q$ 次询问，每次询问为一个颜色 $o$，若该图上存在颜色为 $o$ 的部分，则将与该部分相邻的点涂成颜色 $o$，问最后每个点是什么颜色。</p>
-<p>思路：首先容易想到，这个题应该可以用并查集来维护颜色信息。很直观的做法是我们把该部分相连的每一个点都更改颜色，但这样很显然会超时。我们用 $vector[i]$ 来维护与 $i$ 相邻的点，每次询问时，遍历所有与该部分相邻的点（如果属于就直接跳过），将所有属于该点祖先的边内所有点点放入颜色 $o$ 中。合并的时候要用到启发式合并，将小集合合并到大集合当中去。</p>
-<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><bits/stdc++.h></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mk make_pair</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pb push_back</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pii pair<span class="hljs-meta-string"><int, int></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ArrayDebug(a, l, r) for(int i = l; i <= r; ++i) printf(<span class="hljs-meta-string">"%d%c"</span>, a[i], (i==r)?<span class="hljs-meta-string">'\n'</span>:<span class="hljs-meta-string">' '</span>)</span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">8e5</span>+<span class="hljs-number">7</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> LL mod = <span class="hljs-number">998244353</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> PI = <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>);</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> EPS = <span class="hljs-number">1e-4</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dx[] = {<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>};</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dy[] = {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>};</span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">int</span> t;</span><br><span class="line"><span class="hljs-keyword">int</span> n, m, x, y, q, pre[maxn];</span><br><span class="line"><span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> v[maxn];</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i < n; ++i) {</span><br><span class="line">        pre[i] = i;</span><br><span class="line">        v[i].clear();</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findPre</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> x == pre[x] ? x : pre[x] = findPre(pre[x]);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">uni</span><span class="hljs-params">(<span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> &a, <span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> &b)</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">if</span>(a.size() < b.size()) swap(a, b);</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> u : b) a.pb(u);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &t);</span><br><span class="line">    <span class="hljs-keyword">while</span>(t--) {</span><br><span class="line">        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>, &n, &m);</span><br><span class="line">        init();</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= m; ++i) {</span><br><span class="line">            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>, &x, &y);</span><br><span class="line">            v[x].pb(y);</span><br><span class="line">            v[y].pb(x);</span><br><span class="line">        }</span><br><span class="line">        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &q);</span><br><span class="line">        <span class="hljs-keyword">while</span>(q--) {</span><br><span class="line">            <span class="hljs-keyword">int</span> u;</span><br><span class="line">            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &u);</span><br><span class="line">            <span class="hljs-keyword">if</span>(u != pre[u]) <span class="hljs-keyword">continue</span>;</span><br><span class="line">            <span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> g = v[u];</span><br><span class="line">            v[u].clear();</span><br><span class="line">            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> &x : g) {</span><br><span class="line">                <span class="hljs-keyword">int</span> fa = findPre(x);</span><br><span class="line">                <span class="hljs-keyword">if</span>(fa == u) <span class="hljs-keyword">continue</span>;</span><br><span class="line">                uni(v[u], v[fa]);</span><br><span class="line">                pre[fa] = u;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i < n; ++i) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, findPre(i));</span><br><span class="line">        <span class="hljs-built_in">puts</span>(<span class="hljs-string">""</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+            <html><head></head><body><h2 id="ipcMain"><a href="#ipcMain" class="headerlink" title="ipcMain"></a>ipcMain</h2><p>从主进程到渲染进程的异步通信。当在主进程中使用时，它处理从渲染进程（网页）发送出来的异步和同步信息。从渲染器进程发送的消息将发送到该模块。</p>
+<h3 id="发送消息"><a href="#发送消息" class="headerlink" title="发送消息"></a>发送消息</h3><p>也可以从主进程向渲染进程发送消息。</p>
+<ul>
+<li>发送消息，事件名称为 <code>channel</code></li>
+<li>回复同步信息时，需要设置  <code>event.returnValue</code></li>
+<li>可以使用 <code>event.sender.send()</code> 将异步消息发回发送者。</li>
+</ul>
+<p>例子：</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 主进程</span></span><br><span class="line"><span class="hljs-keyword">const</span> { ipcMain } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'electron'</span>)</span><br><span class="line">ipcMain.on(<span class="hljs-string">'asynchronous-message'</span>, (event, arg) => {</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(arg)</span><br><span class="line">    event.reply(<span class="hljs-string">'asynchronous-reply'</span>, <span class="hljs-string">'pong'</span>)</span><br><span class="line">})</span><br><span class="line"></span><br><span class="line">ipcMain.on(<span class="hljs-string">'synchronous-message'</span>, (event, arg) => {</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(arg)</span><br><span class="line">    event.returnValue = <span class="hljs-string">'pong'</span></span><br><span class="line">})</span><br></pre></td></tr></tbody></table></figure>
+
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 渲染进程</span></span><br><span class="line"><span class="hljs-keyword">const</span> { ipaRenderer } = <span class="hljs-built_in">require</span>(<span class="hljs-string">'electron'</span>)</span><br><span class="line"><span class="hljs-built_in">console</span>.log(ipcRenderer.sendSync(<span class="hljs-string">'synchronous-message'</span>, <span class="hljs-string">'ping'</span>))</span><br><span class="line"></span><br><span class="line">ipcRenderer.on(<span class="hljs-string">'asynchronous-reply'</span>, (event, arg) => {</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(arg)</span><br><span class="line">})</span><br><span class="line">ipcRenderer.send(<span class="hljs-string">'asynchronous-message'</span>, <span class="hljs-string">'ping'</span>)</span><br></pre></td></tr></tbody></table></figure>
+
+
+
+<h3 id="方法"><a href="#方法" class="headerlink" title="方法"></a>方法</h3><h4 id="ipcMain-on-channel-listener"><a href="#ipcMain-on-channel-listener" class="headerlink" title="ipcMain.on(channel, listener)"></a><code>ipcMain.on(channel, listener)</code></h4><ul>
+<li><code>channel</code> String</li>
+<li><code>listener</code> Function<ul>
+<li><code>event</code> IpcMainEvent</li>
+<li><code>...args</code> any[]</li>
+</ul>
+</li>
+</ul>
+<p>监听 <code>channel</code>，当接收到新的消息时 <code>listener</code> 会以 <code>listener(event, args)</code> 的形式被调用。</p>
+<h4 id="ipcMain-once-channel-listener"><a href="#ipcMain-once-channel-listener" class="headerlink" title="ipcMain.once(channel, listener)"></a><code>ipcMain.once(channel, listener)</code></h4><ul>
+<li><code>channel</code> String</li>
+<li><code>listener</code> Function<ul>
+<li><code>event</code> IpcMainEvent</li>
+<li><code>...args</code> any[]</li>
+</ul>
+</li>
+</ul>
+<p>为事件添加一次监听器功能，仅在下次将消息发送到通道时才调用此侦听器，然后将其删除。</p>
+<h4 id="ipcMain-removeListener-channel-listener"><a href="#ipcMain-removeListener-channel-listener" class="headerlink" title="ipcMain.removeListener(channel, listener)"></a><code>ipcMain.removeListener(channel, listener)</code></h4><ul>
+<li><code>channel</code> String</li>
+<li><code>listener</code> Function<ul>
+<li><code>...args</code> any[]</li>
+</ul>
+</li>
+</ul>
+<p>从监听器数组中移除监听 <code>channel</code> 的指定 <code>listener</code> 。</p>
+<h4 id="ipcMain-removeAllListeners-channel"><a href="#ipcMain-removeAllListeners-channel" class="headerlink" title="ipcMain.removeAllListeners([channel])"></a><code>ipcMain.removeAllListeners([channel])</code></h4><ul>
+<li><code>channel</code> String (optional)</li>
+</ul>
+<p>删除所有监听者，或指定的 <code>channel</code> 的所有监听者。</p>
+<h4 id="ipcMain-handle-channel-listener"><a href="#ipcMain-handle-channel-listener" class="headerlink" title="ipcMain.handle(channel, listener)"></a><code>ipcMain.handle(channel, listener)</code></h4><ul>
+<li><code>channel</code> String</li>
+<li><code>listener</code> Function<Promise|any><ul>
+<li><code>event</code>  IpcMainInvokeEvent</li>
+<li><code>...args</code>  any[]</li>
+</ul>
+</li>
+</ul>
+<p>为可调用的 IPC 添加处理程序。每当渲染器程序调用 <code>ipcRenderer.invoke(channel, ...args)</code> 都会调用这个处理程序。</p>
+<p>如果 <code>listener</code>  返回一个 <code>Promise</code>  ，则 <code>Promise</code> 的最终结果将作为对远程调用者的答复而返回。否则，<code>listener</code>  的返回值将用作回复的值。</p>
+<figure class="highlight js hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// Main process</span></span><br><span class="line">ipcMain.handle(<span class="hljs-string">'my-invokable-ipc'</span>, <span class="hljs-keyword">async</span> (event, ...args) => {</span><br><span class="line">  <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> somePromise(...args)</span><br><span class="line">  <span class="hljs-keyword">return</span> result</span><br><span class="line">})</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// Renderer process</span></span><br><span class="line"><span class="hljs-keyword">async</span> () => {</span><br><span class="line">  <span class="hljs-keyword">const</span> result = <span class="hljs-keyword">await</span> ipcRenderer.invoke(<span class="hljs-string">'my-invokable-ipc'</span>, arg1, arg2)</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>作为第一个参数传递给处理程序的事件与传递给常规事件侦听器的事件相同，它包含有关哪些 <code>WebContents</code>  是调用请求源的信息。</p>
+<h4 id="ipcMain-handleOnce-channel-listener"><a href="#ipcMain-handleOnce-channel-listener" class="headerlink" title="ipcMain.handleOnce(channel, listener)"></a><code>ipcMain.handleOnce(channel, listener)</code></h4><ul>
+<li><code>channel</code>  String</li>
+<li><code>listener</code> Function<Promise|any><ul>
+<li><code>event</code>  IpcMainInvokeEvent</li>
+<li><code>...args</code>  any[]</li>
+</ul>
+</li>
+</ul>
+<p>处理单个可调用的 IPC 消息，然后删除侦听器</p>
+<h4 id="ipcMain-removeHandler-channel"><a href="#ipcMain-removeHandler-channel" class="headerlink" title="ipcMain.removeHandler(channel)"></a><code>ipcMain.removeHandler(channel)</code></h4><ul>
+<li><code>channel</code>  String</li>
+</ul>
+<p>为 <code>channel</code>  删除所有处理程序。</p>
+<h4 id="ipcMainEvent-Object-extends-Event"><a href="#ipcMainEvent-Object-extends-Event" class="headerlink" title="ipcMainEvent Object extends Event"></a>ipcMainEvent Object extends <code>Event</code></h4><ul>
+<li><code>frameID</code>  Integer -  发送该消息的渲染进程框架的 ID</li>
+<li><code>returnValue</code>  any - 将其设置为要在同步消息中返回的值</li>
+<li><code>sender</code>  WebContents - 返回发送消息的  WebContents</li>
+<li><code>ports</code>  MessagePortMain[] - 随着消息一起传送的 MessagePort 列表</li>
+<li><code>reply</code>  Function - 将 IPC 消息发送到渲染器框架的函数，该渲染器框架发送当前正在处理的原始消息，你应该使用 <code>reply</code>  方法回复发送的消息，以确保回复将转到正确的进程和框架。<ul>
+<li><code>channel</code>  String</li>
+<li><code>...args</code>  any[]</li>
+</ul>
+</li>
+</ul>
+<h4 id="ipcRendererEvent-对象继承-Event"><a href="#ipcRendererEvent-对象继承-Event" class="headerlink" title="ipcRendererEvent  对象继承 Event"></a><code>ipcRendererEvent</code>  对象继承 <code>Event</code></h4><ul>
+<li><p><code>frameID</code>  Integer -  发送该消息的渲染进程框架的 ID</p>
+</li>
+<li><p>WebContents - 返回发送消息的  WebContents</p>
+</li>
+</ul>
 </body></html>
         </div>
         
@@ -178,7 +262,7 @@
             <div class="level-start">
                 <div class="level-item">
                     <i class="fas fa-tags has-text-grey"></i>&nbsp;
-                    <a class="has-link-grey -link" href="/tags/Algorithm/" rel="tag">Algorithm</a>
+                    <a class="has-link-grey -link" href="/tags/electron/" rel="tag">electron</a>
                 </div>
             </div>
         </div>
@@ -195,17 +279,10 @@
 <div class="card card-transparent">
     <div class="level post-navigation is-flex-wrap is-mobile">
         
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A102/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">牛客多校02</span>
-            </a>
-        </div>
-        
         
         <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2020/07/02/UML-Lec02-b2/">
-                <span class="level-item">UML_Lec02_b2</span>
+            <a class="level level-item has-link-grey  article-nav-next" href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/">
+                <span class="level-item">嵌套函数和闭包</span>
                 <i class="level-item fas fa-chevron-right"></i>
             </a>
         </div>
@@ -335,14 +412,54 @@
                 Catalogue
             </h3>
             <ul class="menu-list"><li>
-        <a class="is-flex" href="#">
+        <a class="is-flex" href="#ipcMain">
         <span class="has-mr-6">1</span>
-        <span></span>
+        <span>ipcMain</span>
         </a><ul class="menu-list"><li>
-        <a class="is-flex" href="#G-Operating-on-a-Graph">
+        <a class="is-flex" href="#发送消息">
         <span class="has-mr-6">1.1</span>
-        <span>$G\ Operating\ on\ a\ Graph$</span>
-        </a></li></ul></li></ul>
+        <span>发送消息</span>
+        </a></li><li>
+        <a class="is-flex" href="#方法">
+        <span class="has-mr-6">1.2</span>
+        <span>方法</span>
+        </a><ul class="menu-list"><li>
+        <a class="is-flex" href="#ipcMain-on-channel-listener">
+        <span class="has-mr-6">1.2.1</span>
+        <span>ipcMain.on(channel, listener)</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcMain-once-channel-listener">
+        <span class="has-mr-6">1.2.2</span>
+        <span>ipcMain.once(channel, listener)</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcMain-removeListener-channel-listener">
+        <span class="has-mr-6">1.2.3</span>
+        <span>ipcMain.removeListener(channel, listener)</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcMain-removeAllListeners-channel">
+        <span class="has-mr-6">1.2.4</span>
+        <span>ipcMain.removeAllListeners([channel])</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcMain-handle-channel-listener">
+        <span class="has-mr-6">1.2.5</span>
+        <span>ipcMain.handle(channel, listener)</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcMain-handleOnce-channel-listener">
+        <span class="has-mr-6">1.2.6</span>
+        <span>ipcMain.handleOnce(channel, listener)</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcMain-removeHandler-channel">
+        <span class="has-mr-6">1.2.7</span>
+        <span>ipcMain.removeHandler(channel)</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcMainEvent-Object-extends-Event">
+        <span class="has-mr-6">1.2.8</span>
+        <span>ipcMainEvent Object extends Event</span>
+        </a></li><li>
+        <a class="is-flex" href="#ipcRendererEvent-对象继承-Event">
+        <span class="has-mr-6">1.2.9</span>
+        <span>ipcRendererEvent  对象继承 Event</span>
+        </a></li></ul></li></ul></li></ul>
         </div>
     </div>
 </div>
@@ -367,7 +484,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.jpg" alt="牛客多校03" height="28">
+                    <img src="/images/logo.jpg" alt="electron-ipcMain.md" height="28">
                 
                 </a>
                 <p class="is-size-7">
