@@ -7,23 +7,16 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
 
-<title>Tags - Hexo</title>
+<title>Category: artical - Hexo</title>
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Hexo">
-<meta property="og:url" content="http://yoursite.com/tags/index.html">
+<meta property="og:url" content="http://yoursite.com/categories/artical/index.html">
 <meta property="og:site_name" content="Hexo">
 <meta property="og:locale" content="en_US">
 <meta property="og:image" content="http://yoursite.com/images/og_image.png">
 <meta property="article:author" content="John Doe">
-<meta property="article:tag" content="MapReduce">
-<meta property="article:tag" content="Redis">
-<meta property="article:tag" content="electron">
-<meta property="article:tag" content="JS">
-<meta property="article:tag" content="Dynamic programming">
-<meta property="article:tag" content="Algorithm">
-<meta property="article:tag" content="Environment configuration">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:image" content="http://yoursite.com/images/og_image.png">
 
@@ -103,7 +96,7 @@
                 <a class="navbar-item"
                 href="/categories">Categories</a>
                 
-                <a class="navbar-item is-active"
+                <a class="navbar-item"
                 href="/tags">Tags</a>
                 
                 <a class="navbar-item"
@@ -135,67 +128,152 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card widget">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
     <div class="card-content">
-        <div class="menu">
-            <h3 class="menu-label">
-                Tags
-            </h3>
-            <div class="field is-grouped is-grouped-multiline">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/categories">Categories</a></li>
+            
+            <li class="is-active"><a href="#" aria-current="page">artical</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-02-09T07:25:07.000Z">2021-02-09</time>
                 
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Algorithm/">
-                        <span class="tag">Algorithm</span>
-                        <span class="tag is-grey">4</span>
-                    </a>
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/artical/">artical</a>
                 </div>
                 
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Dynamic-programming/">
-                        <span class="tag">Dynamic programming</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
                 
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Environment-configuration/">
-                        <span class="tag">Environment configuration</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 minutes read (About 2554 words)
+                </span>
                 
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/JS/">
-                        <span class="tag">JS</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/MapReduce/">
-                        <span class="tag">MapReduce</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/Redis/">
-                        <span class="tag">Redis</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
-                
-                <div class="control">
-                    <a class="tags has-addons" href="/tags/electron/">
-                        <span class="tag">electron</span>
-                        <span class="tag is-grey">1</span>
-                    </a>
-                </div>
                 
             </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/02/09/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Astring/">Redis数据类型：string</a>
+            
+        </h1>
+        <div class="content">
+            <html><head></head><body><h2 id="写在前面"><a href="#写在前面" class="headerlink" title="写在前面"></a>写在前面</h2><p>寒假在家无聊，就想着看看 <code>Redis5.0</code> 的源码，刚好在知乎也看见一个写的不错的笔记，就顺着它的学习路线看代码了</p>
+<h2 id="Redis-是什么？"><a href="#Redis-是什么？" class="headerlink" title="Redis 是什么？"></a><code>Redis</code> 是什么？</h2><p><code>Redis</code> 是一个使用 <code>ANSI C</code> 编写的开源、支持网络、基于内存、分布式、可持久性的键值对存储数据库（wiki 百科）。</p>
+<h2 id="Redis-支持哪些数据类型？"><a href="#Redis-支持哪些数据类型？" class="headerlink" title="Redis 支持哪些数据类型？"></a><code>Redis</code> 支持哪些数据类型？</h2><ul>
+<li>字符串</li>
+<li>字符串列表</li>
+<li>无序不重复的字符串集合</li>
+<li>有序不重复的字符串集合</li>
+<li>键、值都为字符串的哈希表</li>
+</ul>
+<h2 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h2><p><code>Redis</code> 一般将全部的数据都存储在内存中，目前通过两种方法实现持久化：</p>
+<ul>
+<li>快照，一种半持久内用模式。不时地将数据集以异步的方式从内存以 <code>RDB</code> 格式写入硬盘。</li>
+<li>1.1 版本开始使用更安全的 <code>AOF</code> 格式替代，一种只能追加的日志类型。将数据集修改操作记录起来。<code>Redis</code> 能够在后台对只可追加的记录作修改来避免无限增长的日志</li>
+</ul>
+<h2 id="同步"><a href="#同步" class="headerlink" title="同步"></a>同步</h2><p><code>Redis</code> 支持主从同步。数据可以从主服务器向任意数量的服务器上同步，从服务器可以使关联其他从服务器的主服务器，这使得 <code>Redis</code> 可执行单层树复制。从盘可以有意无意的对数据进行写操作。由于完全实现了发布/订阅机制，使得从数据库在任何地方同步树时，可订阅一个频道并接收主服务器完整的消息发布记录。同步对读取操作的可扩展性和数据冗余很有帮助。（讲道理这些我现在也不是很懂。。。）</p>
+<h2 id="性能"><a href="#性能" class="headerlink" title="性能"></a>性能</h2><p>当数据依赖不再需要，Redis这种基于内存的性质，与在执行一个事务时将每个变化都写入硬盘的数据库系统相比就显得执行效率非常高。写与读操作速度没有明显差别</p>
+<h2 id="Redis-中的-string-——-sdshdr"><a href="#Redis-中的-string-——-sdshdr" class="headerlink" title="Redis 中的 string —— sdshdr"></a>Redis 中的 string —— sdshdr</h2><h3 id="数据类型"><a href="#数据类型" class="headerlink" title="数据类型"></a>数据类型</h3><p><code>Redis5.0</code> 中定义了五种 <code>string</code> 类型：</p>
+<ul>
+<li>sdshdr5</li>
+<li>sdshdr8</li>
+<li>sdshdr16</li>
+<li>sdshdr32</li>
+<li>sdshdr64</li>
+</ul>
+<p>没错，后面的数字后缀代表了能存储的字符串的最大长度。我们先来看后面四种，他们都具有相同的结构：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> __<span class="hljs-title">attribute__</span> ((__<span class="hljs-title">packed__</span>)) <span class="hljs-title">sdshdr8</span> {</span></span><br><span class="line">    <span class="hljs-keyword">uint8_t</span> len;            <span class="hljs-comment">// 已使用长度</span></span><br><span class="line">    <span class="hljs-keyword">uint8_t</span> alloc;          <span class="hljs-comment">// 总的大小</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> flags;    <span class="hljs-comment">// 第三位记录类型，高五位无用处</span></span><br><span class="line">    <span class="hljs-keyword">char</span> buf[];             <span class="hljs-comment">// 实际字符缓存</span></span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>所以，<code>sdshdr</code> 类型的结构图如下：</p>
+<p><img src="https://gitee.com/lengpi/blog/blob/master/Redis-string/1.png" alt></p>
+<p>图源：<img src="https://www.zhihu.com/column/c_1231226679504166912" alt></p>
+<p>也就是说，<code>sdshdr</code> 在内存中的格式为一个 <code>Header</code> 字段加上一段连续内存。<code>sds</code> 就是实际字符串的第一个字节。</p>
+<p>由于只有 5 种类型，所以用一个 <code>unsigned char</code> 类型足够描述该种 <code>sdshdr</code> 类型，<code>Redis</code> 中定义了几种 type:</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_TYPE_5  0</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_TYPE_8  1</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_TYPE_16 2</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_TYPE_32 3</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_TYPE_64 4</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_TYPE_MASK 7</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_TYPE_BITS 3</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>显然，通过 <code>flags</code> 字段与 <code>SDS_TYPE_MASK</code> 做位与运算，我们可以得到其类型，而由于结构体使用的是非对齐类型（<code>__attribute__ ((__packed__))</code>），所以，我们直接通过访问 <code>s[-1]</code> 即可获得其头部信息。（讲道理我看到这个也傻了，这不是 <code>runtime error</code> 吗？但是转头一想，里面的数字不过是个偏移量罢了，只要你访问的那段内存是有效的，又怎么会产生段错误呢？）</p>
+<p>现在我们来看看 <code>sdshdr5</code> 吧，他的结构如下：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-class"><span class="hljs-keyword">struct</span> __<span class="hljs-title">attribute__</span> ((__<span class="hljs-title">packed__</span>)) <span class="hljs-title">sdshdr5</span></span></span><br><span class="line"><span class="hljs-class">{</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> flags; <span class="hljs-comment">/* 3 lsb of type, and 5 msb of string length */</span></span><br><span class="line">    <span class="hljs-keyword">char</span> buf[];</span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这样看上去，好像 <code>sdshdr5</code> 就是为了那些较短的字符串（不超过 32 个字节）准备的吧，像是一种静态的类型。对此，<code>Redis</code> 的作者也给出了建议：</p>
+<p><code>Don't use TYPE 5 if strings are going to be reallocated, since it sucks not having a free space left field.</code></p>
+<p>（谁会给 32 个字节的东西重新分配大小呢？）</p>
+<h3 id="通用底层操作"><a href="#通用底层操作" class="headerlink" title="通用底层操作"></a>通用底层操作</h3><p>在源码中，我们可以看到许多的宏定义：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_HDR(T,s) ((struct sdshdr##T *)((s)-(sizeof(struct sdshdr##T))))</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>讲道理 <code>struct sdshdr##T</code> 是啥意思我真不明白，也没找到，我们结合使用了这个宏定义的函数来看看：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">size_t</span> <span class="hljs-title">sdslen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> sds s)</span> </span>{</span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">char</span> flags = s[<span class="hljs-number">-1</span>];</span><br><span class="line">    <span class="hljs-keyword">switch</span>(flags&SDS_TYPE_MASK) {</span><br><span class="line">        <span class="hljs-keyword">case</span> SDS_TYPE_5:</span><br><span class="line">            <span class="hljs-keyword">return</span> SDS_TYPE_5_LEN(flags);</span><br><span class="line">        <span class="hljs-keyword">case</span> SDS_TYPE_8:</span><br><span class="line">            <span class="hljs-keyword">return</span> SDS_HDR(<span class="hljs-number">8</span>,s)->len;</span><br><span class="line">        <span class="hljs-keyword">case</span> SDS_TYPE_16:</span><br><span class="line">            <span class="hljs-keyword">return</span> SDS_HDR(<span class="hljs-number">16</span>,s)->len;</span><br><span class="line">        <span class="hljs-keyword">case</span> SDS_TYPE_32:</span><br><span class="line">            <span class="hljs-keyword">return</span> SDS_HDR(<span class="hljs-number">32</span>,s)->len;</span><br><span class="line">        <span class="hljs-keyword">case</span> SDS_TYPE_64:</span><br><span class="line">            <span class="hljs-keyword">return</span> SDS_HDR(<span class="hljs-number">64</span>,s)->len;</span><br><span class="line">    }</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>从名字不难得出，这就是返回 <code>string</code> 长度的，也就是 <code>Header</code> 中的 <code>len</code> 字段，注意传递进来的 <code>sds</code> 就是 <code>char *</code> 。</p>
+<p>很明显，我们需要通过传递进来的 <code>sds</code> 数据得到对应的 <code>Header</code> 指针，这样我们才能访问 <code>len</code> 字段，那上面的式子就好理解了啊！<code>##T</code> 应该是被替换成了相应的数字，很巧妙的设计！因为结构体中的 <code>char buf[]</code> 是不占内存的，这样我们就直接访问到了 <code>Header</code> 的第一个字节，后面代码中很多地方都巧妙地利用了这一点。</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> SDS_HDR_VAR(T,s) struct sdshdr##T *sh = (void*)((s)-(sizeof(struct sdshdr##T)));</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这一句相比也很明白了，定义了一个全局变量 <code>sh</code>，他能指向对应字符串的 <code>Header</code> 字段的第一个字节。</p>
+<p>接下来就是一些字面意思的函数了：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">size_t</span> <span class="hljs-title">sdsavail</span><span class="hljs-params">(<span class="hljs-keyword">const</span> sds s)</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>计算还有多少可用空间</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sdssetlen</span><span class="hljs-params">(sds s, <span class="hljs-keyword">size_t</span> newlen)</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>设置新长度</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sdsinclen</span><span class="hljs-params">(sds s, <span class="hljs-keyword">size_t</span> inc)</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>增加长度</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">size_t</span> <span class="hljs-title">sdsalloc</span><span class="hljs-params">(<span class="hljs-keyword">const</span> sds s)</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>得到总空间</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">void</span> <span class="hljs-title">sdssetalloc</span><span class="hljs-params">(sds s, <span class="hljs-keyword">size_t</span> newlen)</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>重置总空间</p>
+<h3 id="各种操作函数"><a href="#各种操作函数" class="headerlink" title="各种操作函数"></a>各种操作函数</h3><figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">char</span> <span class="hljs-title">sdsReqType</span><span class="hljs-params">(<span class="hljs-keyword">size_t</span> string_size)</span></span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">int</span> <span class="hljs-title">sdsHdrSzie</span><span class="hljs-params">(<span class="hljs-keyword">char</span> type)</span></span>;</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">static</span> <span class="hljs-keyword">inline</span> <span class="hljs-keyword">size_t</span> <span class="hljs-title">sdsTypeMaxSize</span><span class="hljs-params">(<span class="hljs-keyword">char</span> type)</span></span></span><br></pre></td></tr></tbody></table></figure>
+
+<p>这是位与 <code>src/sds.c</code> 中的两个静态函数，分别用于返回一个特定 <code>HeaderType</code>的头部结构体长度、根据一个 <code>string_size</code> 的长度，返回合适的 <code>HeaderType</code>、以及根据 <code>type</code> 返回最大容量。</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">sds _sdsnewlen(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *init, <span class="hljs-keyword">size_t</span> initlen, <span class="hljs-keyword">int</span> trymalloc);</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这是根据给定的 <code>init</code> 指针和 <code>initlen</code> 长度 来创建一个 <code>sds</code> 的函数，他的实现还是比较复杂的，具体描述如下：</p>
+<p>我们根据给定的长度返回一个 <code>HeaderType</code>，比如：5，8，16，32 或者 64，然后对一个 <code>void *</code> 类型的变量进行初始化，长度为 <code>initlen+hdrlen+1</code>，加一是有讲究的，因为在 <code>Redis</code> 中 <code>sds</code> 总是以 <code>'\0'</code> 作为结尾的，所以需要多分配一个字节的内存，哪有的小伙伴就有疑问了，要是数据中出现了 <code>'\0'</code> 怎么办？这点完全不用担心，因为我们有 <code>len</code> 字段啊。之后我们会初始化 <code>Header</code> 中的各个字段，并将 <code>init</code> 中的内容拷贝到 <code>sds</code> 的缓冲区，以 <code>'\0'</code> 结尾。</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function">sds <span class="hljs-title">sdsnewlen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *init, <span class="hljs-keyword">size_t</span> initlen)</span> </span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> _sdsnewlen(init, initlen, <span class="hljs-number">0</span>);</span><br><span class="line">}</span><br><span class="line"><span class="hljs-function">sds <span class="hljs-title">sdstrynewlen</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *init, <span class="hljs-keyword">size_t</span> initlen)</span> </span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> _sdsnewlen(init, initlen, <span class="hljs-number">1</span>);</span><br><span class="line">}</span><br><span class="line"><span class="hljs-comment">/* Create an empty (zero length) sds string. Even in this case the string</span></span><br><span class="line"><span class="hljs-comment"> * always has an implicit null term. */</span></span><br><span class="line"><span class="hljs-function">sds <span class="hljs-title">sdsempty</span><span class="hljs-params">(<span class="hljs-keyword">void</span>)</span> </span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> sdsnewlen(<span class="hljs-string">""</span>,<span class="hljs-number">0</span>);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/* Create a new sds string starting from a null terminated C string. */</span></span><br><span class="line"><span class="hljs-function">sds <span class="hljs-title">sdsnew</span><span class="hljs-params">(<span class="hljs-keyword">const</span> <span class="hljs-keyword">char</span> *init)</span> </span>{</span><br><span class="line">    <span class="hljs-keyword">size_t</span> initlen = (init == <span class="hljs-literal">NULL</span>) ? <span class="hljs-number">0</span> : <span class="hljs-built_in">strlen</span>(init);</span><br><span class="line">    <span class="hljs-keyword">return</span> sdsnewlen(init, initlen);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">/* Duplicate an sds string. */</span></span><br><span class="line"><span class="hljs-function">sds <span class="hljs-title">sdsdup</span><span class="hljs-params">(<span class="hljs-keyword">const</span> sds s)</span> </span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> sdsnewlen(s, sdslen(s));</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这些函数都很简单，对着上面看就 ok 了，但是有关内存分配我其实并没有讲，这一块确实比较大，我打算以后单独拎出来。</p>
+<p>接下来我们看以个比较有意思的函数</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function">sds <span class="hljs-title">sdsMakeRoomFor</span><span class="hljs-params">(sds s, <span class="hljs-keyword">size_t</span> addlen)</span></span>;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>这个接口用于给一个给定的字符串扩容，可以确保用户在调用这个接口之后，可以向缓存之中续写 <code>addlen</code> 个字节的内容，但是这个操作不会改变已经使用的缓存的大小，也就是不会改变 <code>sdslen</code> 调用的结果。这个函数有点儿复杂，我就不讲码德直接上代码了。。。</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function">sds <span class="hljs-title">sdsMakeRoomFor</span><span class="hljs-params">(sds s, <span class="hljs-keyword">size_t</span> addlen)</span> </span>{</span><br><span class="line">    <span class="hljs-keyword">void</span> *sh, *newsh;</span><br><span class="line">    <span class="hljs-comment">// 计算剩余空间</span></span><br><span class="line">    <span class="hljs-keyword">size_t</span> avail = sdsavail(s);</span><br><span class="line">    <span class="hljs-keyword">size_t</span> len, newlen;</span><br><span class="line">    <span class="hljs-keyword">char</span> type, oldtype = s[<span class="hljs-number">-1</span>] & SDS_TYPE_MASK;</span><br><span class="line">    <span class="hljs-keyword">int</span> hdrlen;</span><br><span class="line">    <span class="hljs-keyword">size_t</span> usable;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/* 如果剩余空间足够的话，就原封不动返回 */</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (avail >= addlen) <span class="hljs-keyword">return</span> s;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 参数字符串长度</span></span><br><span class="line">    len = sdslen(s);</span><br><span class="line">    <span class="hljs-comment">// 获取 Header 指针</span></span><br><span class="line">    sh = (<span class="hljs-keyword">char</span>*)s-sdsHdrSize(oldtype);</span><br><span class="line">    newlen = (len+addlen);</span><br><span class="line">    <span class="hljs-comment">// 这里的目的是减少多次扩容带来开销，索性一次给多点，1024 * 1024，也就是 1MB</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (newlen < SDS_MAX_PREALLOC)</span><br><span class="line">        newlen *= <span class="hljs-number">2</span>;</span><br><span class="line">    <span class="hljs-keyword">else</span></span><br><span class="line">        newlen += SDS_MAX_PREALLOC;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 获得新类型</span></span><br><span class="line">    type = sdsReqType(newlen);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// 提示好好看，就是别用 sdshdr5</span></span><br><span class="line">    <span class="hljs-comment">/* Don't use type 5: the user is appending to the string and type 5 is</span></span><br><span class="line"><span class="hljs-comment">     * not able to remember empty space, so sdsMakeRoomFor() must be called</span></span><br><span class="line"><span class="hljs-comment">     * at every appending operation. */</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (type == SDS_TYPE_5) type = SDS_TYPE_8;</span><br><span class="line"></span><br><span class="line">    hdrlen = sdsHdrSize(type);</span><br><span class="line">    <span class="hljs-comment">// 没有引发升级</span></span><br><span class="line">    <span class="hljs-keyword">if</span> (oldtype==type) {</span><br><span class="line">        newsh = s_realloc_usable(sh, hdrlen+newlen+<span class="hljs-number">1</span>, &usable);</span><br><span class="line">        <span class="hljs-keyword">if</span> (newsh == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;</span><br><span class="line">        s = (<span class="hljs-keyword">char</span>*)newsh+hdrlen;</span><br><span class="line">    } <span class="hljs-keyword">else</span> {</span><br><span class="line">        <span class="hljs-comment">// 升级了的话会构造一个新的 sds</span></span><br><span class="line">        <span class="hljs-comment">/* Since the header size changes, need to move the string forward,</span></span><br><span class="line"><span class="hljs-comment">         * and can't use realloc */</span></span><br><span class="line">        newsh = s_malloc_usable(hdrlen+newlen+<span class="hljs-number">1</span>, &usable);</span><br><span class="line">        <span class="hljs-keyword">if</span> (newsh == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">return</span> <span class="hljs-literal">NULL</span>;</span><br><span class="line">        <span class="hljs-built_in">memcpy</span>((<span class="hljs-keyword">char</span>*)newsh+hdrlen, s, len+<span class="hljs-number">1</span>);</span><br><span class="line">        s_free(sh);</span><br><span class="line">        s = (<span class="hljs-keyword">char</span>*)newsh+hdrlen;</span><br><span class="line">        s[<span class="hljs-number">-1</span>] = type;</span><br><span class="line">        sdssetlen(s, len);</span><br><span class="line">    }</span><br><span class="line">    usable = usable-hdrlen<span class="hljs-number">-1</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (usable > sdsTypeMaxSize(type))</span><br><span class="line">        usable = sdsTypeMaxSize(type);</span><br><span class="line">    sdssetalloc(s, usable);</span><br><span class="line">    <span class="hljs-keyword">return</span> s;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>尤其是最后一点，升级将会导致分配一个新的 <code>sds</code>，然后返回新的指针，这也就意味着调用者无法保证作为参数传入的 <code>sds</code> 指针在调用结束后是否有效，对此，作者给出了建议：</p>
+<p><code>Don't call sdsMakeRoomFor() when obviously not needed.</code></p>
+<p>剩下的就是处理内容的函数了，这些我就自个儿慢慢看了（或者咕掉），都不是很复杂，类似于 C 中的一些处理函数，只不过要注意处理 <code>Header</code> 字段。</p>
+</body></html>
+        </div>
+        
+        
+        
     </div>
-</div></div>
+</div>
+
+
+
+
+
+
+
+
+
+</div>
                 
 
 
