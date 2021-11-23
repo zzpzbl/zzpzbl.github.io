@@ -146,6 +146,114 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-02-10T05:50:31.000Z">2021-02-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/artical/">artical</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 minutes read (About 2439 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/">Redis数据类型：map</a>
+            
+        </h1>
+        <div class="content">
+            <html><head></head><body><h2 id="Redis-中的哈希表"><a href="#Redis-中的哈希表" class="headerlink" title="Redis 中的哈希表"></a>Redis 中的哈希表</h2><p>毫无疑问，哈希表是一种非常重要的数据结构，在做算法题时，我们也经常用到它来实现常数级别的访问，而 <code>Redis</code> 作为一种 <code>Key-Value</code> 的内存数据库，当然少不了哈希表的实现了。</p>
+<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><p>在 <code>Redis</code> 中，哈希表是基于链表实现的，首先看它在 <code>src/dic.h</code> 中定义的链表的节点结构：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictEntry</span> {</span></span><br><span class="line">    <span class="hljs-keyword">void</span> * key;</span><br><span class="line">    <span class="hljs-keyword">union</span> {</span><br><span class="line">        <span class="hljs-keyword">void</span> * val;</span><br><span class="line">        <span class="hljs-keyword">uint64_t</span> u64;</span><br><span class="line">        <span class="hljs-keyword">int64_t</span> s64;</span><br><span class="line">        <span class="hljs-keyword">double</span> d;</span><br><span class="line">    } v;</span><br><span class="line">    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictEntry</span> * <span class="hljs-title">next</span>;</span></span><br><span class="line">} dictEntry;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，<code>value</code> 部分是使用一个 <code>union</code> 来表示的，查看 <code>union</code> 具体内容可以看到，<code>value</code> 类型可以是一个 64 位整数、双精度浮点数或者一段内存。</p>
+<p>然后我们来看哈希表的结构：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictht</span> {</span></span><br><span class="line">    dictEntry ** table;     <span class="hljs-comment">// table 是一个数组结构，每个元素都是一个 dictEntry 指针</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> size;     <span class="hljs-comment">// 哈希桶的数量</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> sizemask; <span class="hljs-comment">// 桶数量的掩码</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> used;     <span class="hljs-comment">// 已经使用的数量</span></span><br><span class="line">} dictht;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上过算法与数据结构的小伙伴想必也很清楚，就像在一个数组（链表）中，每个节点又单独是一条链表，就像下面这样：</p>
+<p><img src alt></p>
+<p>图源：<img src="https://pic4.zhimg.com/v2-089226bfa7d387bd325d80d865d483b7_r.jpg" alt></p>
+<p>其中的掩码主要是为了实现快速取余的用途，它的大小为 <code>size-1</code>，在 <code>Redis</code> 中，桶的数量一定是 $2^n$ 个，那么给定一个哈希值 $hash$ 可以使用 $hash & sizemask$ 来得到该数据落在哪一个哈希桶中。</p>
+<p>接下来来看看字典类型特定函数，在 <code>src/dic.h</code> 中，定义了一个结构体，里面存储着一系列函数指针，这些对应了基础的哈希操作，看博客说这是函数式编程的思想，然而我并没有上过这课。。。</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictType</span> {</span></span><br><span class="line">    <span class="hljs-keyword">uint64_t</span> (*hashFunction)(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key);            <span class="hljs-comment">//通给可定key，计算对应的哈希值</span></span><br><span class="line">    <span class="hljs-keyword">void</span> *(*keyDup)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key);     <span class="hljs-comment">//用于复制key的函数指针</span></span><br><span class="line">    <span class="hljs-keyword">void</span> *(*valDup)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *obj);     <span class="hljs-comment">//用于复制value的函数指针</span></span><br><span class="line">    <span class="hljs-keyword">int</span> (*keyCompare)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key2); <span class="hljs-comment">//两个key的比较函数</span></span><br><span class="line">    <span class="hljs-keyword">void</span> (*keyDestructor)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">void</span> *key);     <span class="hljs-comment">//用于处理key的释放</span></span><br><span class="line">    <span class="hljs-keyword">void</span> (*valDestructor)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">void</span> *obj);     <span class="hljs-comment">//用于处理val的释放</span></span><br><span class="line">} dictType;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在 <code>src/server.c</code> 中，<code>Redis</code> 为不同类型的哈希表给出了不同的 <code>dictType</code>，例如：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/* Db->dict, key是sds动态字符串, vals则是Redis对象类型 */</span></span><br><span class="line">dictType dbDictType = {</span><br><span class="line">    dictSdsHash,                <span class="hljs-comment">/* hash function */</span></span><br><span class="line">    <span class="hljs-literal">NULL</span>,                       <span class="hljs-comment">/* key dup */</span></span><br><span class="line">    <span class="hljs-literal">NULL</span>,                       <span class="hljs-comment">/* val dup */</span></span><br><span class="line">    dictSdsKeyCompare,          <span class="hljs-comment">/* key compare */</span></span><br><span class="line">    dictSdsDestructor,          <span class="hljs-comment">/* key destructor */</span></span><br><span class="line">    dictObjectDestructor        <span class="hljs-comment">/* val destructor */</span></span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有了 <code>dictht</code> 和 <code>dictType</code>，我们可以确定最终的字典结构了：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dict</span> {</span></span><br><span class="line">    dictType *type;</span><br><span class="line">    <span class="hljs-keyword">void</span> *privdata;</span><br><span class="line">    dictht ht[<span class="hljs-number">2</span>];</span><br><span class="line">    <span class="hljs-keyword">long</span> rehashidx; <span class="hljs-comment">/* rehashing not in progress if rehashidx == -1 */</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> iterators; <span class="hljs-comment">/* number of iterators currently running */</span></span><br><span class="line">} dict;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>字典在内存中的结构如下：</p>
+<p>图源：<img src="https://pic3.zhimg.com/v2-593acbfb3c20cc86fe6bd132c52372be_r.jpg" alt></p>
+<p>在 <code>Redis</code> 中，每一个字典有两个 <code>dictht</code>，这是为了实现 <strong>渐进式 rehash</strong></p>
+<p>这个概念我也不明白，看看《Redis 设计与实现》的说法吧：</p>
+<h3 id="rehash"><a href="#rehash" class="headerlink" title="rehash"></a>rehash</h3><p>随着操作的不断执行，哈希表保存的键值对会逐渐地增多或减少，为了让哈希表的负载因子维持在一个合理的范围之内，当哈希表保存的键值对数量太多或太少时，程序需要对哈希表的大小进行相应的扩展或者收缩。</p>
+<p><code>Redis</code> 对字典的哈希表执行 <code>rehash</code> 的步骤如下：</p>
+<ul>
+<li>为字典的 <code>ht[1]</code> 分配空间，这个哈希表的大小取决于要执行的操作，以及 <code>ht[0]</code> 当前包含的键值对数量（即 <code>ht[0].used</code>）：<ul>
+<li>如果执行扩展操作，那么 <code>ht[1]</code> 的大小为第一个大于等于 <code>ht[0].used * 2</code> 的 $2^n$。</li>
+<li>如果执行收缩操作，那么 <code>ht[1]</code> 的大小为第一个大于等于 <code>ht[0].used</code> 的 $2^n$。</li>
+</ul>
+</li>
+<li>将保存在 <code>ht[0]</code> 中的所有键值对 <code>rehash</code> 到 <code>ht[1]</code> 上面：<code>rehash</code> 指的是重新计算键的哈希值和索引值，然后将键值对放到 <code>ht[1]</code> 哈希表的指定位置上。</li>
+<li>当 <code>ht[0]</code> 包含的所有键值对都迁移到了 <code>ht[1]</code> 之后，释放 <code>ht[0]</code>，将 <code>ht[1]</code> 设置为 <code>ht[0]</code>，并在 <code>ht[1]</code> 新创建一个空表，为下一次 <code>rehash</code> 做准备。</li>
+</ul>
+<p>接下来看看什么是渐进式 <code>rehash</code> 吧：</p>
+<p>扩展或收缩哈希表需要将 <code>ht[0]</code> 里面的所有键值对 <code>rehash</code> 到 <code>ht[1]</code> 里面， 但是， 这个 <code>rehash</code> 动作并不是一次性、集中式地完成的， 而是分多次、渐进式地完成的。</p>
+<p>这样做的原因在于， 如果 <code>ht[0]</code> 里只保存着四个键值对， 那么服务器可以在瞬间就将这些键值对全部 <code>rehash</code> 到 <code>ht[1]</code> ； 但是， 如果哈希表里保存的键值对数量不是四个， 而是四百万、四千万甚至四亿个键值对， 那么要一次性将这些键值对全部 <code>rehash</code> 到 <code>ht[1]</code> 的话， 庞大的计算量可能会导致服务器在一段时间内停止服务。</p>
+<p>因此， 为了避免 <code>rehash</code> 对服务器性能造成影响， 服务器不是一次性将 <code>ht[0]</code> 里面的所有键值对全部 <code>rehash</code> 到 <code>ht[1]</code> ， 而是分多次、渐进式地将 <code>ht[0]</code> 里面的键值对慢慢地 <code>rehash</code> 到 <code>ht[1]</code> </p>
+<p>过程如下：</p>
+<ul>
+<li>为 <code>ht[1]</code> 分配空间， 让字典同时持有 <code>ht[0]</code> 和 <code>ht[1]</code> 两个哈希表。</li>
+<li>在字典中维持一个索引计数器变量 <code>rehashidx</code> ， 并将它的值设置为 <code>0</code> ， 表示 <code>rehash</code> 工作正式开始。</li>
+<li>在 <code>rehash</code> 进行期间， 每次对字典执行添加、删除、查找或者更新操作时， 程序除了执行指定的操作以外， 还会顺带将 <code>ht[0]</code> 哈希表在 <code>rehashidx</code> 索引上的所有键值对 <code>rehash</code> 到 <code>ht[1]</code> ， 当 <code>rehash</code> 工作完成之后， 程序将 <code>rehashidx</code> 属性的值增一。</li>
+<li>随着字典操作的不断执行， 最终在某个时间点上， <code>ht[0]</code> 的所有键值对都会被 <code>rehash</code> 至 <code>ht[1]</code> ， 这时程序将 <code>rehashidx</code> 属性的值设为 <code>-1</code> ， 表示 <code>rehash</code> 操作已完成。</li>
+</ul>
+<h2 id="基础底层操作"><a href="#基础底层操作" class="headerlink" title="基础底层操作"></a>基础底层操作</h2><figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 dictType 中的 valDestructor 来释放 entry 节点 val 值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictFreeVal(d, entry) \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->valDestructor) \</span><br><span class="line">        (d)->type->valDestructor((d)->privdata, (entry)->v.val)</span><br><span class="line"><span class="hljs-comment">// 为 val 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetVal(d, entry, _val_) do { \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->valDup) \</span><br><span class="line">        (entry)->v.val = (d)->type->valDup((d)->privdata, _val_); \</span><br><span class="line">    <span class="hljs-keyword">else</span> \</span><br><span class="line">        (entry)->v.val = (_val_); \</span><br><span class="line">} <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 为 v.s64 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetSignedIntegerVal(entry, _val_) \</span></span><br><span class="line">    <span class="hljs-keyword">do</span> { (entry)->v.s64 = _val_; } <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 为 v.u64 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetUnsignedIntegerVal(entry, _val_) \</span></span><br><span class="line">    <span class="hljs-keyword">do</span> { (entry)->v.u64 = _val_; } <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 为 v.d 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetDoubleVal(entry, _val_) \</span></span><br><span class="line">    <span class="hljs-keyword">do</span> { (entry)->v.d = _val_; } <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 使用 dict 中 type 的 valDestructor 来释放 entry 节点的key</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictFreeKey(d, entry) \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->keyDestructor) \</span><br><span class="line">        (d)->type->keyDestructor((d)->privdata, (entry)->key)</span><br><span class="line"><span class="hljs-comment">// 为 entry 中的 key 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetKey(d, entry, _key_) do { \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->keyDup) \</span><br><span class="line">        (entry)->key = (d)->type->keyDup((d)->privdata, _key_); \</span><br><span class="line">    <span class="hljs-keyword">else</span> \</span><br><span class="line">        (entry)->key = (_key_); \</span><br><span class="line">} <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 对两个 key 进行比较</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictCompareKeys(d, key1, key2) \</span></span><br><span class="line">    (((d)->type->keyCompare) ? \</span><br><span class="line">        (d)->type->keyCompare((d)->privdata, key1, key2) : \</span><br><span class="line">        (key1) == (key2))</span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictHashKey(d, key) (d)->type->hashFunction(key)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetKey(he) ((he)->key)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetVal(he) ((he)->v.val)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetSignedIntegerVal(he) ((he)->v.s64)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetUnsignedIntegerVal(he) ((he)->v.u64)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetDoubleVal(he) ((he)->v.d)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSlots(d) ((d)->ht[0].size+(d)->ht[1].size)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSize(d) ((d)->ht[0].used+(d)->ht[1].used)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictIsRehashing(d) ((d)->rehashidx != -1)</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><p>构建以及初始化</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> _dictReset(dictht *ht)</span><br><span class="line">{</span><br><span class="line">    ht->table = <span class="hljs-literal">NULL</span>;</span><br><span class="line">    ht->size = <span class="hljs-number">0</span>;</span><br><span class="line">    ht->sizemask = <span class="hljs-number">0</span>;</span><br><span class="line">    ht->used = <span class="hljs-number">0</span>;</span><br><span class="line">}</span><br><span class="line"><span class="hljs-function">dict *<span class="hljs-title">dictCreate</span><span class="hljs-params">(dictType *type,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">        <span class="hljs-keyword">void</span> *privDataPtr)</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    dict *d = zmalloc(<span class="hljs-keyword">sizeof</span>(*d));</span><br><span class="line"></span><br><span class="line">    _dictInit(d,type,privDataPtr);</span><br><span class="line">    <span class="hljs-keyword">return</span> d;</span><br><span class="line">}</span><br><span class="line"><span class="hljs-keyword">int</span> _dictInit(dict *d, dictType *type,</span><br><span class="line">        <span class="hljs-keyword">void</span> *privDataPtr)</span><br><span class="line">{</span><br><span class="line">    _dictReset(&d->ht[<span class="hljs-number">0</span>]);</span><br><span class="line">    _dictReset(&d->ht[<span class="hljs-number">1</span>]);</span><br><span class="line">    d->type = type;</span><br><span class="line">    d->privdata = privDataPtr;</span><br><span class="line">    d->rehashidx = <span class="hljs-number">-1</span>;</span><br><span class="line">    d->iterators = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">return</span> DICT_OK;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>这三个函数不难看懂，第一个用来对给定的 <code>dictht</code> 进行重置，第三个使用一个给定的 <code>dictType</code> 以及一个私有数据指针 <code>privDataPtr</code> 来初始化一个 <code>dictht</code>。第二个是创建函数，调用 <code>zmalloc</code> 函数来分配一个 <code>dict</code>，并进行初始化。</p>
+<p>析构：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dictRelease</span><span class="hljs-params">(dict *d)</span></span>;</span><br><span class="line"><span class="hljs-keyword">int</span> _dictClear(dict *d, dictht *ht, <span class="hljs-keyword">void</span>(callback)(<span class="hljs-keyword">void</span> *));</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dictEmpty</span><span class="hljs-params">(dict* d, <span class="hljs-keyword">void</span>(callbacl)(<span class="hljs-keyword">void</span>*))</span></span>;</span><br></pre></td></tr></tbody></table></figure>
+<p><code>_dictClear</code> 是整个的关键，<code>dictRelease</code> 和 <code>dictEmpty</code> 的区别在于是否释放掉哈希表，前者会释放而后者只是清除元素，我们重点来关注一下 <code>_dictClear</code> 函数：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> _dictClear(dict *d, dictht *ht, <span class="hljs-keyword">void</span>(callback)(<span class="hljs-keyword">void</span> *)) {</span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> i;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/* Free all the elements */</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i < ht->size && ht->used > <span class="hljs-number">0</span>; i++) {</span><br><span class="line">        dictEntry *he, *nextHe;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback && (i & <span class="hljs-number">65535</span>) == <span class="hljs-number">0</span>) callback(d->privdata);</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">if</span> ((he = ht->table[i]) == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">continue</span>;</span><br><span class="line">        <span class="hljs-keyword">while</span>(he) {</span><br><span class="line">            nextHe = he->next;</span><br><span class="line">            dictFreeKey(d, he);</span><br><span class="line">            dictFreeVal(d, he);</span><br><span class="line">            zfree(he);</span><br><span class="line">            ht->used--;</span><br><span class="line">            he = nextHe;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="hljs-comment">/* Free the table and the allocated cache structure */</span></span><br><span class="line">    zfree(ht->table);</span><br><span class="line">    <span class="hljs-comment">/* Re-initialize the table */</span></span><br><span class="line">    _dictReset(ht);</span><br><span class="line">    <span class="hljs-keyword">return</span> DICT_OK; <span class="hljs-comment">/* never fails */</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，他传入了一个回调函数，那么每清空 $65536$ 个桶时，会调用这个回调函数，对此，作者给出的理由是：</p>
+<p><code>dict.c: added optional callback to dictEmpty().Redis hash table implementation has many non-blocking fearures like incremental rehashing, however while deleting a large hash table there was no way to have a callback called to do some incremental work.This commit adds this support, as an optiona callback argument to dictEmtpy() that is currently called at a fixed interval (one time every 65k deletions)</code></p>
+<p>好吧，看的不是很懂，翻译过来是：在 <code>Redis</code> 的哈希表操作很多的是以非阻塞的方式进行的，但是释放与清空的操作却是 以阻塞的方式进行的，当删除一个很大的哈希表时，缺少一种增量逐步执行某些操作的机制。 因此，作者在这次提交中引入了这个机制，可以在删除哈希表时，以一个固定的间隔来执行回调函数。</p>
+<p>好吧我还是不明白，这里借用一下知乎一篇文章举的例子：</p>
+<p><img src alt></p>
+</body></html>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-02-09T07:25:07.000Z">2021-02-09</time>
                 
                 <div class="level-item">
@@ -316,7 +424,7 @@
                         Posts
                     </p>
                     <p class="title has-text-weight-normal">
-                        16
+                        18
                     </p>
                 </div>
             </div>
@@ -326,7 +434,7 @@
                         Categories
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        9
                     </p>
                 </div>
             </div>
@@ -336,7 +444,7 @@
                         Tags
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        8
                     </p>
                 </div>
             </div>
@@ -418,6 +526,14 @@
                 <span class="level-item tag">4</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/C/">
+            <span class="level-start">
+                <span class="level-item">C++</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/Client/">
             <span class="level-start">
                 <span class="level-item">Client</span>
@@ -471,7 +587,7 @@
                 <span class="level-item">artical</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li>
             </ul>
@@ -484,7 +600,7 @@
         <h3 class="menu-label">
             Tag Cloud
         </h3>
-        <a href="/tags/Algorithm/" style="font-size: 20px;">Algorithm</a> <a href="/tags/Dynamic-programming/" style="font-size: 10px;">Dynamic programming</a> <a href="/tags/Environment-configuration/" style="font-size: 10px;">Environment configuration</a> <a href="/tags/JS/" style="font-size: 10px;">JS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/electron/" style="font-size: 10px;">electron</a>
+        <a href="/tags/Algorithm/" style="font-size: 20px;">Algorithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dynamic-programming/" style="font-size: 10px;">Dynamic programming</a> <a href="/tags/Environment-configuration/" style="font-size: 10px;">Environment configuration</a> <a href="/tags/JS/" style="font-size: 10px;">JS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/electron/" style="font-size: 10px;">electron</a>
     </div>
 </div>
     
@@ -496,6 +612,44 @@
         <h3 class="menu-label">
             Recent
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/11/21/Gotw1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Gotw1">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-11-21T13:29:07.000Z">2021-11-21</time></div>
+                    <a href="/2021/11/21/Gotw1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Gotw1</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/C/">C++</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Redis数据类型：map">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-10T05:50:31.000Z">2021-02-10</time></div>
+                    <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Redis数据类型：map</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/artical/">artical</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -554,44 +708,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/09/17/electron-ipcMain-md/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="electron-ipcMain.md">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-17T10:47:59.000Z">2020-09-17</time></div>
-                    <a href="/2020/09/17/electron-ipcMain-md/" class="title has-link-black-ter is-size-6 has-text-weight-normal">electron-ipcMain.md</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Client/">Client</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="嵌套函数和闭包">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-15T08:37:30.000Z">2020-09-15</time></div>
-                    <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="title has-link-black-ter is-size-6 has-text-weight-normal">嵌套函数和闭包</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web/">Web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
         
@@ -604,12 +720,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2021/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2021/02/">
                 <span class="level-start">
                     <span class="level-item">February 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -690,6 +817,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/C/">
+                        <span class="tag">C++</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Dynamic-programming/">
                         <span class="tag">Dynamic programming</span>
                         <span class="tag is-grey">1</span>
@@ -720,7 +854,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Redis/">
                         <span class="tag">Redis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -756,6 +890,44 @@
         
         <article class="media">
             
+            <a href="/2021/11/21/Gotw1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Gotw1">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-11-21T13:29:07.000Z">2021-11-21</time></div>
+                    <a href="/2021/11/21/Gotw1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Gotw1</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/C/">C++</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Redis数据类型：map">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-10T05:50:31.000Z">2021-02-10</time></div>
+                    <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Redis数据类型：map</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/artical/">artical</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/02/09/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Astring/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Redis数据类型：string">
@@ -811,44 +983,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/09/17/electron-ipcMain-md/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="electron-ipcMain.md">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-17T10:47:59.000Z">2020-09-17</time></div>
-                    <a href="/2020/09/17/electron-ipcMain-md/" class="title has-link-black-ter is-size-6 has-text-weight-normal">electron-ipcMain.md</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Client/">Client</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="嵌套函数和闭包">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-15T08:37:30.000Z">2020-09-15</time></div>
-                    <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="title has-link-black-ter is-size-6 has-text-weight-normal">嵌套函数和闭包</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web/">Web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
     
@@ -861,12 +995,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2021/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2021/02/">
                 <span class="level-start">
                     <span class="level-item">February 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -947,6 +1092,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/C/">
+                        <span class="tag">C++</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Dynamic-programming/">
                         <span class="tag">Dynamic programming</span>
                         <span class="tag is-grey">1</span>
@@ -977,7 +1129,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Redis/">
                         <span class="tag">Redis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 

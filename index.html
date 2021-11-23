@@ -136,6 +136,180 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-11-21T13:29:07.000Z">2021-11-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/C/">C++</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    7 minutes read (About 1015 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/11/21/Gotw1/">Gotw1</a>
+            
+        </h1>
+        <div class="content">
+            <html><head></head><body><h2 id="C-有多少种初始化变量的方法"><a href="#C-有多少种初始化变量的方法" class="headerlink" title="C++ 有多少种初始化变量的方法"></a>C++ 有多少种初始化变量的方法</h2><p>四种：</p>
+<ul>
+<li>默认初始化</li>
+<li>直接初始化</li>
+<li>拷贝初始化</li>
+<li>列表初始化</li>
+</ul>
+<h2 id="说下下面各行代码的含义"><a href="#说下下面各行代码的含义" class="headerlink" title="说下下面各行代码的含义"></a>说下下面各行代码的含义</h2><figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">widget w;                   <span class="hljs-comment">// (a)</span></span><br><span class="line"><span class="hljs-function">widget <span class="hljs-title">w</span><span class="hljs-params">()</span></span>;                 <span class="hljs-comment">// (b)</span></span><br><span class="line">widget w{};                 <span class="hljs-comment">// (c)</span></span><br><span class="line"><span class="hljs-function">widget <span class="hljs-title">w</span><span class="hljs-params">(x)</span></span>;                <span class="hljs-comment">// (d)</span></span><br><span class="line">widget w{x};                <span class="hljs-comment">// (e)</span></span><br><span class="line">widget w = x;               <span class="hljs-comment">// (f)</span></span><br><span class="line">widget w = {x};             <span class="hljs-comment">// (g)</span></span><br><span class="line"><span class="hljs-keyword">auto</span> w = x;                 <span class="hljs-comment">// (h)</span></span><br><span class="line"><span class="hljs-keyword">auto</span> w = widget{x};         <span class="hljs-comment">// (i)</span></span><br></pre></td></tr></tbody></table></figure>
+
+<p><code>(a)</code> 是默认初始化，调用的是 <code>default constructor widget::widget()</code><br><code>(b)</code> 是个陷阱，不是变量初始化，而是一个名为 <code>w</code> 返回 <code>widget</code> 类型且不接受参数的函数的声明，令人讨厌的事，这种形式很有可能形成歧义，例如下面的代码：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// same problem (gadget and doodad are types)</span></span><br><span class="line"><span class="hljs-comment">//</span></span><br><span class="line"><span class="hljs-function">widget <span class="hljs-title">w</span><span class="hljs-params">( gadget(), doodad() )</span></span>;  <span class="hljs-comment">// pitfall: not a variable declaration</span></span><br></pre></td></tr></tbody></table></figure>
+<p>好消息是 <code>C++11</code> 解决了这个问题，通过提供一种几乎在所有情况下都取代 <code>case (b)</code> 的语法来解决这个问题，这样我们就不必再陷入这个坑了，答案就是 <code>case (c)</code><br><code>(c)</code> 是一种非常好的写法，它总是初始化变量，并且永远不会与函数声明产生歧义。<br><code>(d)</code> 和 <code>(e)</code> 都是直接初始化（假设 <code>x</code> 不是类型名）。二者都是通过 <code>widget::widget(x)</code>。如果 <code>x</code> 是 <code>widget</code> 类型，则调用拷贝构造函数，否则，将调用转换构造函数，注意到 <code>(e)</code> 创建了一个 <code>std::initializer_list</code>。如果 <code>widget</code> 有一个带 <code>initializer_list</code> 的构造函数，那么这个构造函数是首选； 否则，如果 <code>widget</code> 具有接受任何类型 <code>x</code> 的构造函数（可能带有转换），则使用该构造函数。<br>使用 <code>(e)</code> 有以下几个好处（相较于 <code>(d)</code>）：</p>
+<ul>
+<li>避免了歧义，因为 <code>(e)</code> 永远不可能是是一个函数声明</li>
+<li>更安全，因为 <code>(e)</code> 不允许有损转换</li>
+</ul>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">i1</span><span class="hljs-params">( <span class="hljs-number">12.345</span> )</span></span>;           <span class="hljs-comment">// ok: toss .345, we didn't like it anyway</span></span><br><span class="line"><span class="hljs-keyword">int</span> i2{ <span class="hljs-number">12.345</span> };           <span class="hljs-comment">// error: would be lossy implicit narrowing</span></span><br></pre></td></tr></tbody></table></figure>
+<p><code>(f)</code> 和 <code>(g)</code> 分别是复制初始化和复制列表初始化<br>在 <code>(f)</code> 中，从概念上来讲，<code>w</code> 应该是通过拷贝构造函数或者移动构造函数初始化的，但必须纠正的一点是，不是出现的 <code>=</code> 就意味着调用的 <code>T::operator=</code>，它仍然是属于初始化而不是赋值。如果 <code>x</code> 是 <code>widget</code> 类型的，那么 <code>(f)</code> 和 <code>(d)</code> 是一样的，调用 <code>widget::widget(x);</code>（除了 <code>explicit ctor</code> 被调用）；如果 <code>x</code> 是其它类型，从概念上讲，编译器首先将 <code>x</code> 隐式转换为临时 <code>widget</code> 对象，然后从该临时右值移动构造 <code>w</code>，如果没有更好的移动构造函数，则使用复制构造作为“移动的缓慢方式”作为备份可用。假设隐式转换可用，<code>(f)</code> 的意思与 <code>widget w(widget(x));</code> 相同。<br><code>(g)</code> 被称之为 <code>copy-list-initialization</code>，含义和 <code>widget w{x}</code> 相同，但注意，<code>copy-list-initialization</code> 不会调用 <code>explicit ctor</code>，只有普通的构造函数才能被调用<br><code>(h)</code> 和 <code>(i)</code> 都是复制初始化，他们的语义和 <code>(f)</code> 和 <code>(g)</code> 相似，但更加简单，因为 <code>auto</code> 保证了右手表达式的类型将被准确推导出<br>Line (h) means the same as (d), type_of_x w(x);. Only a single copy constructor is called. This is guaranteed to stay true as the program evolves: Because line (h) does not commit to an explicit type, it is guaranteed to be both maximally efficient because there can be no conversion involved, and maximally robust under maintenance as the type of w “auto”-matically tracks the type of x which may change as the program is maintained.</p>
+<p>Line (i) is the most consistent spelling when you do want to commit to a specific type and explicitly request a conversion if needed, and once again the { } syntax happily avoids lossy narrowing conversions. In practice on most compilers, only a single constructor is called—similarly to what we saw with (f) and (g), conceptually there are two constructor calls, a converting or copy constructor to create a temporary widget{x} followed by a move to move it to w, but compilers routinely elide the latter.</p>
+<p>这两段话来自 <a href="https://herbsutter.com/2013/05/09/gotw-1-solution/，翻译起来很累。。。" target="_blank" rel="noopener">https://herbsutter.com/2013/05/09/gotw-1-solution/，翻译起来很累。。。</a></p>
+</body></html>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-02-10T05:50:31.000Z">2021-02-10</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/artical/">artical</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 minutes read (About 2439 words)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/">Redis数据类型：map</a>
+            
+        </h1>
+        <div class="content">
+            <html><head></head><body><h2 id="Redis-中的哈希表"><a href="#Redis-中的哈希表" class="headerlink" title="Redis 中的哈希表"></a>Redis 中的哈希表</h2><p>毫无疑问，哈希表是一种非常重要的数据结构，在做算法题时，我们也经常用到它来实现常数级别的访问，而 <code>Redis</code> 作为一种 <code>Key-Value</code> 的内存数据库，当然少不了哈希表的实现了。</p>
+<h2 id="基本结构"><a href="#基本结构" class="headerlink" title="基本结构"></a>基本结构</h2><p>在 <code>Redis</code> 中，哈希表是基于链表实现的，首先看它在 <code>src/dic.h</code> 中定义的链表的节点结构：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictEntry</span> {</span></span><br><span class="line">    <span class="hljs-keyword">void</span> * key;</span><br><span class="line">    <span class="hljs-keyword">union</span> {</span><br><span class="line">        <span class="hljs-keyword">void</span> * val;</span><br><span class="line">        <span class="hljs-keyword">uint64_t</span> u64;</span><br><span class="line">        <span class="hljs-keyword">int64_t</span> s64;</span><br><span class="line">        <span class="hljs-keyword">double</span> d;</span><br><span class="line">    } v;</span><br><span class="line">    <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictEntry</span> * <span class="hljs-title">next</span>;</span></span><br><span class="line">} dictEntry;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，<code>value</code> 部分是使用一个 <code>union</code> 来表示的，查看 <code>union</code> 具体内容可以看到，<code>value</code> 类型可以是一个 64 位整数、双精度浮点数或者一段内存。</p>
+<p>然后我们来看哈希表的结构：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictht</span> {</span></span><br><span class="line">    dictEntry ** table;     <span class="hljs-comment">// table 是一个数组结构，每个元素都是一个 dictEntry 指针</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> size;     <span class="hljs-comment">// 哈希桶的数量</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> sizemask; <span class="hljs-comment">// 桶数量的掩码</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> used;     <span class="hljs-comment">// 已经使用的数量</span></span><br><span class="line">} dictht;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>上过算法与数据结构的小伙伴想必也很清楚，就像在一个数组（链表）中，每个节点又单独是一条链表，就像下面这样：</p>
+<p><img src alt></p>
+<p>图源：<img src="https://pic4.zhimg.com/v2-089226bfa7d387bd325d80d865d483b7_r.jpg" alt></p>
+<p>其中的掩码主要是为了实现快速取余的用途，它的大小为 <code>size-1</code>，在 <code>Redis</code> 中，桶的数量一定是 $2^n$ 个，那么给定一个哈希值 $hash$ 可以使用 $hash & sizemask$ 来得到该数据落在哪一个哈希桶中。</p>
+<p>接下来来看看字典类型特定函数，在 <code>src/dic.h</code> 中，定义了一个结构体，里面存储着一系列函数指针，这些对应了基础的哈希操作，看博客说这是函数式编程的思想，然而我并没有上过这课。。。</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dictType</span> {</span></span><br><span class="line">    <span class="hljs-keyword">uint64_t</span> (*hashFunction)(<span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key);            <span class="hljs-comment">//通给可定key，计算对应的哈希值</span></span><br><span class="line">    <span class="hljs-keyword">void</span> *(*keyDup)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key);     <span class="hljs-comment">//用于复制key的函数指针</span></span><br><span class="line">    <span class="hljs-keyword">void</span> *(*valDup)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *obj);     <span class="hljs-comment">//用于复制value的函数指针</span></span><br><span class="line">    <span class="hljs-keyword">int</span> (*keyCompare)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key1, <span class="hljs-keyword">const</span> <span class="hljs-keyword">void</span> *key2); <span class="hljs-comment">//两个key的比较函数</span></span><br><span class="line">    <span class="hljs-keyword">void</span> (*keyDestructor)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">void</span> *key);     <span class="hljs-comment">//用于处理key的释放</span></span><br><span class="line">    <span class="hljs-keyword">void</span> (*valDestructor)(<span class="hljs-keyword">void</span> *privdata, <span class="hljs-keyword">void</span> *obj);     <span class="hljs-comment">//用于处理val的释放</span></span><br><span class="line">} dictType;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>在 <code>src/server.c</code> 中，<code>Redis</code> 为不同类型的哈希表给出了不同的 <code>dictType</code>，例如：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/* Db->dict, key是sds动态字符串, vals则是Redis对象类型 */</span></span><br><span class="line">dictType dbDictType = {</span><br><span class="line">    dictSdsHash,                <span class="hljs-comment">/* hash function */</span></span><br><span class="line">    <span class="hljs-literal">NULL</span>,                       <span class="hljs-comment">/* key dup */</span></span><br><span class="line">    <span class="hljs-literal">NULL</span>,                       <span class="hljs-comment">/* val dup */</span></span><br><span class="line">    dictSdsKeyCompare,          <span class="hljs-comment">/* key compare */</span></span><br><span class="line">    dictSdsDestructor,          <span class="hljs-comment">/* key destructor */</span></span><br><span class="line">    dictObjectDestructor        <span class="hljs-comment">/* val destructor */</span></span><br><span class="line">};</span><br></pre></td></tr></tbody></table></figure>
+
+<p>有了 <code>dictht</code> 和 <code>dictType</code>，我们可以确定最终的字典结构了：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">typedef</span> <span class="hljs-class"><span class="hljs-keyword">struct</span> <span class="hljs-title">dict</span> {</span></span><br><span class="line">    dictType *type;</span><br><span class="line">    <span class="hljs-keyword">void</span> *privdata;</span><br><span class="line">    dictht ht[<span class="hljs-number">2</span>];</span><br><span class="line">    <span class="hljs-keyword">long</span> rehashidx; <span class="hljs-comment">/* rehashing not in progress if rehashidx == -1 */</span></span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> iterators; <span class="hljs-comment">/* number of iterators currently running */</span></span><br><span class="line">} dict;</span><br></pre></td></tr></tbody></table></figure>
+
+<p>字典在内存中的结构如下：</p>
+<p>图源：<img src="https://pic3.zhimg.com/v2-593acbfb3c20cc86fe6bd132c52372be_r.jpg" alt></p>
+<p>在 <code>Redis</code> 中，每一个字典有两个 <code>dictht</code>，这是为了实现 <strong>渐进式 rehash</strong></p>
+<p>这个概念我也不明白，看看《Redis 设计与实现》的说法吧：</p>
+<h3 id="rehash"><a href="#rehash" class="headerlink" title="rehash"></a>rehash</h3><p>随着操作的不断执行，哈希表保存的键值对会逐渐地增多或减少，为了让哈希表的负载因子维持在一个合理的范围之内，当哈希表保存的键值对数量太多或太少时，程序需要对哈希表的大小进行相应的扩展或者收缩。</p>
+<p><code>Redis</code> 对字典的哈希表执行 <code>rehash</code> 的步骤如下：</p>
+<ul>
+<li>为字典的 <code>ht[1]</code> 分配空间，这个哈希表的大小取决于要执行的操作，以及 <code>ht[0]</code> 当前包含的键值对数量（即 <code>ht[0].used</code>）：<ul>
+<li>如果执行扩展操作，那么 <code>ht[1]</code> 的大小为第一个大于等于 <code>ht[0].used * 2</code> 的 $2^n$。</li>
+<li>如果执行收缩操作，那么 <code>ht[1]</code> 的大小为第一个大于等于 <code>ht[0].used</code> 的 $2^n$。</li>
+</ul>
+</li>
+<li>将保存在 <code>ht[0]</code> 中的所有键值对 <code>rehash</code> 到 <code>ht[1]</code> 上面：<code>rehash</code> 指的是重新计算键的哈希值和索引值，然后将键值对放到 <code>ht[1]</code> 哈希表的指定位置上。</li>
+<li>当 <code>ht[0]</code> 包含的所有键值对都迁移到了 <code>ht[1]</code> 之后，释放 <code>ht[0]</code>，将 <code>ht[1]</code> 设置为 <code>ht[0]</code>，并在 <code>ht[1]</code> 新创建一个空表，为下一次 <code>rehash</code> 做准备。</li>
+</ul>
+<p>接下来看看什么是渐进式 <code>rehash</code> 吧：</p>
+<p>扩展或收缩哈希表需要将 <code>ht[0]</code> 里面的所有键值对 <code>rehash</code> 到 <code>ht[1]</code> 里面， 但是， 这个 <code>rehash</code> 动作并不是一次性、集中式地完成的， 而是分多次、渐进式地完成的。</p>
+<p>这样做的原因在于， 如果 <code>ht[0]</code> 里只保存着四个键值对， 那么服务器可以在瞬间就将这些键值对全部 <code>rehash</code> 到 <code>ht[1]</code> ； 但是， 如果哈希表里保存的键值对数量不是四个， 而是四百万、四千万甚至四亿个键值对， 那么要一次性将这些键值对全部 <code>rehash</code> 到 <code>ht[1]</code> 的话， 庞大的计算量可能会导致服务器在一段时间内停止服务。</p>
+<p>因此， 为了避免 <code>rehash</code> 对服务器性能造成影响， 服务器不是一次性将 <code>ht[0]</code> 里面的所有键值对全部 <code>rehash</code> 到 <code>ht[1]</code> ， 而是分多次、渐进式地将 <code>ht[0]</code> 里面的键值对慢慢地 <code>rehash</code> 到 <code>ht[1]</code> </p>
+<p>过程如下：</p>
+<ul>
+<li>为 <code>ht[1]</code> 分配空间， 让字典同时持有 <code>ht[0]</code> 和 <code>ht[1]</code> 两个哈希表。</li>
+<li>在字典中维持一个索引计数器变量 <code>rehashidx</code> ， 并将它的值设置为 <code>0</code> ， 表示 <code>rehash</code> 工作正式开始。</li>
+<li>在 <code>rehash</code> 进行期间， 每次对字典执行添加、删除、查找或者更新操作时， 程序除了执行指定的操作以外， 还会顺带将 <code>ht[0]</code> 哈希表在 <code>rehashidx</code> 索引上的所有键值对 <code>rehash</code> 到 <code>ht[1]</code> ， 当 <code>rehash</code> 工作完成之后， 程序将 <code>rehashidx</code> 属性的值增一。</li>
+<li>随着字典操作的不断执行， 最终在某个时间点上， <code>ht[0]</code> 的所有键值对都会被 <code>rehash</code> 至 <code>ht[1]</code> ， 这时程序将 <code>rehashidx</code> 属性的值设为 <code>-1</code> ， 表示 <code>rehash</code> 操作已完成。</li>
+</ul>
+<h2 id="基础底层操作"><a href="#基础底层操作" class="headerlink" title="基础底层操作"></a>基础底层操作</h2><figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 使用 dictType 中的 valDestructor 来释放 entry 节点 val 值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictFreeVal(d, entry) \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->valDestructor) \</span><br><span class="line">        (d)->type->valDestructor((d)->privdata, (entry)->v.val)</span><br><span class="line"><span class="hljs-comment">// 为 val 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetVal(d, entry, _val_) do { \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->valDup) \</span><br><span class="line">        (entry)->v.val = (d)->type->valDup((d)->privdata, _val_); \</span><br><span class="line">    <span class="hljs-keyword">else</span> \</span><br><span class="line">        (entry)->v.val = (_val_); \</span><br><span class="line">} <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 为 v.s64 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetSignedIntegerVal(entry, _val_) \</span></span><br><span class="line">    <span class="hljs-keyword">do</span> { (entry)->v.s64 = _val_; } <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 为 v.u64 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetUnsignedIntegerVal(entry, _val_) \</span></span><br><span class="line">    <span class="hljs-keyword">do</span> { (entry)->v.u64 = _val_; } <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 为 v.d 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetDoubleVal(entry, _val_) \</span></span><br><span class="line">    <span class="hljs-keyword">do</span> { (entry)->v.d = _val_; } <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 使用 dict 中 type 的 valDestructor 来释放 entry 节点的key</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictFreeKey(d, entry) \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->keyDestructor) \</span><br><span class="line">        (d)->type->keyDestructor((d)->privdata, (entry)->key)</span><br><span class="line"><span class="hljs-comment">// 为 entry 中的 key 赋值</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSetKey(d, entry, _key_) do { \</span></span><br><span class="line">    <span class="hljs-keyword">if</span> ((d)->type->keyDup) \</span><br><span class="line">        (entry)->key = (d)->type->keyDup((d)->privdata, _key_); \</span><br><span class="line">    <span class="hljs-keyword">else</span> \</span><br><span class="line">        (entry)->key = (_key_); \</span><br><span class="line">} <span class="hljs-keyword">while</span>(<span class="hljs-number">0</span>)</span><br><span class="line"><span class="hljs-comment">// 对两个 key 进行比较</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictCompareKeys(d, key1, key2) \</span></span><br><span class="line">    (((d)->type->keyCompare) ? \</span><br><span class="line">        (d)->type->keyCompare((d)->privdata, key1, key2) : \</span><br><span class="line">        (key1) == (key2))</span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictHashKey(d, key) (d)->type->hashFunction(key)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetKey(he) ((he)->key)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetVal(he) ((he)->v.val)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetSignedIntegerVal(he) ((he)->v.s64)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetUnsignedIntegerVal(he) ((he)->v.u64)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictGetDoubleVal(he) ((he)->v.d)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSlots(d) ((d)->ht[0].size+(d)->ht[1].size)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictSize(d) ((d)->ht[0].used+(d)->ht[1].used)</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> dictIsRehashing(d) ((d)->rehashidx != -1)</span></span><br></pre></td></tr></tbody></table></figure>
+
+<h2 id="API"><a href="#API" class="headerlink" title="API"></a>API</h2><p>构建以及初始化</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> _dictReset(dictht *ht)</span><br><span class="line">{</span><br><span class="line">    ht->table = <span class="hljs-literal">NULL</span>;</span><br><span class="line">    ht->size = <span class="hljs-number">0</span>;</span><br><span class="line">    ht->sizemask = <span class="hljs-number">0</span>;</span><br><span class="line">    ht->used = <span class="hljs-number">0</span>;</span><br><span class="line">}</span><br><span class="line"><span class="hljs-function">dict *<span class="hljs-title">dictCreate</span><span class="hljs-params">(dictType *type,</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">        <span class="hljs-keyword">void</span> *privDataPtr)</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    dict *d = zmalloc(<span class="hljs-keyword">sizeof</span>(*d));</span><br><span class="line"></span><br><span class="line">    _dictInit(d,type,privDataPtr);</span><br><span class="line">    <span class="hljs-keyword">return</span> d;</span><br><span class="line">}</span><br><span class="line"><span class="hljs-keyword">int</span> _dictInit(dict *d, dictType *type,</span><br><span class="line">        <span class="hljs-keyword">void</span> *privDataPtr)</span><br><span class="line">{</span><br><span class="line">    _dictReset(&d->ht[<span class="hljs-number">0</span>]);</span><br><span class="line">    _dictReset(&d->ht[<span class="hljs-number">1</span>]);</span><br><span class="line">    d->type = type;</span><br><span class="line">    d->privdata = privDataPtr;</span><br><span class="line">    d->rehashidx = <span class="hljs-number">-1</span>;</span><br><span class="line">    d->iterators = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">return</span> DICT_OK;</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+<p>这三个函数不难看懂，第一个用来对给定的 <code>dictht</code> 进行重置，第三个使用一个给定的 <code>dictType</code> 以及一个私有数据指针 <code>privDataPtr</code> 来初始化一个 <code>dictht</code>。第二个是创建函数，调用 <code>zmalloc</code> 函数来分配一个 <code>dict</code>，并进行初始化。</p>
+<p>析构：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dictRelease</span><span class="hljs-params">(dict *d)</span></span>;</span><br><span class="line"><span class="hljs-keyword">int</span> _dictClear(dict *d, dictht *ht, <span class="hljs-keyword">void</span>(callback)(<span class="hljs-keyword">void</span> *));</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">dictEmpty</span><span class="hljs-params">(dict* d, <span class="hljs-keyword">void</span>(callbacl)(<span class="hljs-keyword">void</span>*))</span></span>;</span><br></pre></td></tr></tbody></table></figure>
+<p><code>_dictClear</code> 是整个的关键，<code>dictRelease</code> 和 <code>dictEmpty</code> 的区别在于是否释放掉哈希表，前者会释放而后者只是清除元素，我们重点来关注一下 <code>_dictClear</code> 函数：</p>
+<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">int</span> _dictClear(dict *d, dictht *ht, <span class="hljs-keyword">void</span>(callback)(<span class="hljs-keyword">void</span> *)) {</span><br><span class="line">    <span class="hljs-keyword">unsigned</span> <span class="hljs-keyword">long</span> i;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">/* Free all the elements */</span></span><br><span class="line">    <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i < ht->size && ht->used > <span class="hljs-number">0</span>; i++) {</span><br><span class="line">        dictEntry *he, *nextHe;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">if</span> (callback && (i & <span class="hljs-number">65535</span>) == <span class="hljs-number">0</span>) callback(d->privdata);</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">if</span> ((he = ht->table[i]) == <span class="hljs-literal">NULL</span>) <span class="hljs-keyword">continue</span>;</span><br><span class="line">        <span class="hljs-keyword">while</span>(he) {</span><br><span class="line">            nextHe = he->next;</span><br><span class="line">            dictFreeKey(d, he);</span><br><span class="line">            dictFreeVal(d, he);</span><br><span class="line">            zfree(he);</span><br><span class="line">            ht->used--;</span><br><span class="line">            he = nextHe;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="hljs-comment">/* Free the table and the allocated cache structure */</span></span><br><span class="line">    zfree(ht->table);</span><br><span class="line">    <span class="hljs-comment">/* Re-initialize the table */</span></span><br><span class="line">    _dictReset(ht);</span><br><span class="line">    <span class="hljs-keyword">return</span> DICT_OK; <span class="hljs-comment">/* never fails */</span></span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
+
+<p>我们可以看到，他传入了一个回调函数，那么每清空 $65536$ 个桶时，会调用这个回调函数，对此，作者给出的理由是：</p>
+<p><code>dict.c: added optional callback to dictEmpty().Redis hash table implementation has many non-blocking fearures like incremental rehashing, however while deleting a large hash table there was no way to have a callback called to do some incremental work.This commit adds this support, as an optiona callback argument to dictEmtpy() that is currently called at a fixed interval (one time every 65k deletions)</code></p>
+<p>好吧，看的不是很懂，翻译过来是：在 <code>Redis</code> 的哈希表操作很多的是以非阻塞的方式进行的，但是释放与清空的操作却是 以阻塞的方式进行的，当删除一个很大的哈希表时，缺少一种增量逐步执行某些操作的机制。 因此，作者在这次提交中引入了这个机制，可以在删除哈希表时，以一个固定的间隔来执行回调函数。</p>
+<p>好吧我还是不明白，这里借用一下知乎一篇文章举的例子：</p>
+<p><img src alt></p>
+</body></html>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+
+    
+<div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-02-09T07:25:07.000Z">2021-02-09</time>
                 
                 <div class="level-item">
@@ -804,114 +978,6 @@
 
 
 
-    
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-07-21T09:15:40.000Z">2020-07-21</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/ACM/">ACM</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 minutes read (About 922 words)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A102/">牛客多校02</a>
-            
-        </h1>
-        <div class="content">
-            <html><head></head><body><h1 id><a href="#" class="headerlink" title></a></h1><h2 id="F-Fake-Maxpooling-二维单调队列"><a href="#F-Fake-Maxpooling-二维单调队列" class="headerlink" title="$F\ Fake\ Maxpooling(二维单调队列)$"></a>$F\ Fake\ Maxpooling(二维单调队列)$</h2><p>题意：给你一个 $n<em>m$ 的数组，数组中的元素为 $a_{i,j}=lcm(i,j)$，再给你一个数字 $k$，求出子矩阵大小为 $k</em>k$ 的最大值的和。</p>
-<p>思路：这里介绍一下单调队列。单调队列，顾名思义，就是一种具有单调性的队列，一种递增，另一种递减。用单调队列来解决问题，一般都是需要得到当前区间的最小值或者最大值。</p>
-<p>我们先考虑一维的情况，得到区间长度为 $k$ 的最大值。</p>
-<p>举个例子：有 $7,6,8,12,9,10,3$ 七个数字，现在让你找出范围 $(i-4,i]$ 的最小值。接下来是模拟过程：</p>
-<p>初始化为 ${0}$。</p>
-<p>$i=1\rightarrow{7}$<br>$i=2\rightarrow{6}$<br>$i=3\rightarrow{6,8}$<br>$i=4\rightarrow{6,8,12}$<br>$i=5\rightarrow{6,8,9}$<br>$i=6$ 此时队列中元素 $6$ 不在范围 $(2,6]$ 中，故将 $6$ 弹出 $\rightarrow{8,9,10}$<br>$i=7\rightarrow{3}$</p>
-<p>我们来看一道例题：洛谷 $p1866$</p>
-<p>题目描述：有一个长为 $n$ 的序列 $a$，以及一个大小为 $k$ 的窗口。现在这个从左边开始向右滑动，每次滑动一个单位，求出每次滑动后窗口中的最大值和最小值。<br>我们直接套模板解决这道题吧。</p>
-<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><iostream></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><queue></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><cstdio></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pii pair<span class="hljs-meta-string"><int, int></span></span></span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">int</span> n, k;</span><br><span class="line"><span class="hljs-keyword">int</span> a[<span class="hljs-number">1000007</span>];</span><br><span class="line"><span class="hljs-built_in">deque</span><pii> que_max;</span><br><span class="line"><span class="hljs-built_in">deque</span><pii> que_min;</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> ans_max, ans_min;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>, &n, &k);</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= n; ++i) <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &a[i]);</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= k; ++i) {</span><br><span class="line">        <span class="hljs-keyword">while</span>(!que_max.empty() && que_max.back().second <= a[i]) que_max.pop_back();</span><br><span class="line">        que_max.push_back({i, a[i]});</span><br><span class="line">        <span class="hljs-keyword">while</span>(!que_min.empty() && que_min.back().second >= a[i]) que_min.pop_back();</span><br><span class="line">        que_min.push_back({i, a[i]});</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    ans_max.push_back(que_max.front().second);</span><br><span class="line">    ans_min.push_back(que_min.front().second);</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = k + <span class="hljs-number">1</span>; i <= n; ++i) {</span><br><span class="line">        <span class="hljs-keyword">while</span>(!que_max.empty() && que_max.back().second <= a[i]) que_max.pop_back();</span><br><span class="line">        que_max.push_back({i, a[i]});</span><br><span class="line">        <span class="hljs-keyword">while</span>(!que_min.empty() && que_min.back().second >= a[i]) que_min.pop_back();</span><br><span class="line">        que_min.push_back({i, a[i]});</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">int</span> left = i - k + <span class="hljs-number">1</span>;</span><br><span class="line"></span><br><span class="line">        <span class="hljs-keyword">while</span>(que_max.front().first < left) que_max.pop_front();</span><br><span class="line">        ans_max.push_back(que_max.front().second);</span><br><span class="line">        <span class="hljs-keyword">while</span>(que_min.front().first < left) que_min.pop_front();</span><br><span class="line">        ans_min.push_back(que_min.front().second);</span><br><span class="line"></span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> &x : ans_min) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, x);</span><br><span class="line">    <span class="hljs-built_in">puts</span>(<span class="hljs-string">""</span>);</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> &x : ans_max) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, x);</span><br><span class="line">    <span class="hljs-built_in">puts</span>(<span class="hljs-string">""</span>);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-<p>我们再回到这道题，二维的话分开处理不就好了吗，先处理行的最大值，再处理列的最大值，分两次维护单调队列。</p>
-<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><bits/stdc++.h></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mk make_pair</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pb push_back</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pii pair<span class="hljs-meta-string"><int, int></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> fir first</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> sec second</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ArrayDebug(a, l, r) for(int i = l; i <= r; ++i) printf(<span class="hljs-meta-string">"%d%c"</span>, a[i], (i==r)?<span class="hljs-meta-string">'\n'</span>:<span class="hljs-meta-string">' '</span>)</span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">5e3</span>+<span class="hljs-number">7</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> LL mod = <span class="hljs-number">998244353</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> PI = <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>);</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> EPS = <span class="hljs-number">1e-8</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dx[] = {<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>};</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dy[] = {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>};</span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">int</span> n, m, k;</span><br><span class="line"><span class="hljs-keyword">int</span> a[maxn][maxn], x[maxn][maxn];</span><br><span class="line"><span class="hljs-built_in">deque</span><pii> dq;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">gcd</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x, <span class="hljs-keyword">int</span> y)</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> y == <span class="hljs-number">0</span> ? x : gcd(y, x % y);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= n; ++i)</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j <= m; ++j)</span><br><span class="line">    a[i][j] = i * j / gcd(i, j);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d%d"</span>, &n, &m, &k);</span><br><span class="line">    init();</span><br><span class="line">    LL ans = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line">    <span class="hljs-comment">// for(int i = 1; i <= n; ++i) </span></span><br><span class="line">    <span class="hljs-comment">// {</span></span><br><span class="line">    <span class="hljs-comment">//     for(int j = 1; j <= m; ++j) cout << a[i][j] << ' ';</span></span><br><span class="line">    <span class="hljs-comment">//     cout << endl;</span></span><br><span class="line">    <span class="hljs-comment">// }</span></span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= n; ++i) {</span><br><span class="line">        dq.clear();</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j <= k; ++j) {</span><br><span class="line">            <span class="hljs-keyword">while</span>(!dq.empty() && dq.back().sec <= a[i][j]) dq.pop_back();</span><br><span class="line">            dq.push_back(mk(j, a[i][j]));</span><br><span class="line">        }</span><br><span class="line">        x[i][<span class="hljs-number">1</span>] = dq.front().sec;</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = k + <span class="hljs-number">1</span>; j <= m; ++j) {</span><br><span class="line">            <span class="hljs-keyword">while</span>(!dq.empty() && dq.back().sec <= a[i][j]) dq.pop_back();</span><br><span class="line">            dq.push_back(mk(j, a[i][j]));</span><br><span class="line">            <span class="hljs-keyword">int</span> left = j - k + <span class="hljs-number">1</span>;</span><br><span class="line">            <span class="hljs-keyword">while</span>(dq.front().first < left) dq.pop_front();</span><br><span class="line">            x[i][left] = dq.front().sec;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> j = <span class="hljs-number">1</span>; j <= m - k + <span class="hljs-number">1</span>; ++j) {</span><br><span class="line">        dq.clear();</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= k; ++i) {</span><br><span class="line">            <span class="hljs-keyword">while</span>(!dq.empty() && dq.back().sec <= x[i][j]) dq.pop_back();</span><br><span class="line">            dq.push_back(mk(i, x[i][j]));</span><br><span class="line">        }</span><br><span class="line"></span><br><span class="line">        ans += dq.front().sec;</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = k + <span class="hljs-number">1</span>; i <= n; ++i) {</span><br><span class="line">            <span class="hljs-keyword">while</span>(!dq.empty() && dq.back().sec <= x[i][j]) dq.pop_back();</span><br><span class="line">            dq.push_back(mk(i, x[i][j]));</span><br><span class="line">            <span class="hljs-keyword">int</span> left = i - k + <span class="hljs-number">1</span>;</span><br><span class="line">            <span class="hljs-keyword">while</span>(dq.front().first < left) dq.pop_front();</span><br><span class="line">            ans += dq.front().sec;</span><br><span class="line">        }</span><br><span class="line">    }</span><br><span class="line">    <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%lld\n"</span>, ans);</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-
-</body></html>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
-    
-<div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2020-07-21T08:56:06.000Z">2020-07-21</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/ACM/">ACM</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    3 minutes read (About 449 words)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2020/07/21/%E7%89%9B%E5%AE%A2%E5%A4%9A%E6%A0%A103/">牛客多校03</a>
-            
-        </h1>
-        <div class="content">
-            <html><head></head><body><h1 id><a href="#" class="headerlink" title></a></h1><h2 id="G-Operating-on-a-Graph"><a href="#G-Operating-on-a-Graph" class="headerlink" title="$G\ Operating\ on\ a\ Graph$"></a>$G\ Operating\ on\ a\ Graph$</h2><p>题意：给定一个图，$q$ 次询问，每次询问为一个颜色 $o$，若该图上存在颜色为 $o$ 的部分，则将与该部分相邻的点涂成颜色 $o$，问最后每个点是什么颜色。</p>
-<p>思路：首先容易想到，这个题应该可以用并查集来维护颜色信息。很直观的做法是我们把该部分相连的每一个点都更改颜色，但这样很显然会超时。我们用 $vector[i]$ 来维护与 $i$ 相邻的点，每次询问时，遍历所有与该部分相邻的点（如果属于就直接跳过），将所有属于该点祖先的边内所有点点放入颜色 $o$ 中。合并的时候要用到启发式合并，将小集合合并到大集合当中去。</p>
-<figure class="highlight cpp hljs"><table><tbody><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">include</span> <span class="hljs-meta-string"><bits/stdc++.h></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> LL long long</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> mk make_pair</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pb push_back</span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> pii pair<span class="hljs-meta-string"><int, int></span></span></span><br><span class="line"><span class="hljs-meta">#<span class="hljs-meta-keyword">define</span> ArrayDebug(a, l, r) for(int i = l; i <= r; ++i) printf(<span class="hljs-meta-string">"%d%c"</span>, a[i], (i==r)?<span class="hljs-meta-string">'\n'</span>:<span class="hljs-meta-string">' '</span>)</span></span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> maxn = <span class="hljs-number">8e5</span>+<span class="hljs-number">7</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> LL mod = <span class="hljs-number">998244353</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> INF = <span class="hljs-number">0x3f3f3f3f</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> PI = <span class="hljs-built_in">acos</span>(<span class="hljs-number">-1</span>);</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">double</span> EPS = <span class="hljs-number">1e-4</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dx[] = {<span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>, <span class="hljs-number">0</span>};</span><br><span class="line"><span class="hljs-keyword">const</span> <span class="hljs-keyword">int</span> dy[] = {<span class="hljs-number">0</span>, <span class="hljs-number">1</span>, <span class="hljs-number">0</span>, <span class="hljs-number">-1</span>};</span><br><span class="line"><span class="hljs-keyword">using</span> <span class="hljs-keyword">namespace</span> <span class="hljs-built_in">std</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">int</span> t;</span><br><span class="line"><span class="hljs-keyword">int</span> n, m, x, y, q, pre[maxn];</span><br><span class="line"><span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> v[maxn];</span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">init</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i < n; ++i) {</span><br><span class="line">        pre[i] = i;</span><br><span class="line">        v[i].clear();</span><br><span class="line">    }</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">findPre</span><span class="hljs-params">(<span class="hljs-keyword">int</span> x)</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">return</span> x == pre[x] ? x : pre[x] = findPre(pre[x]);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">void</span> <span class="hljs-title">uni</span><span class="hljs-params">(<span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> &a, <span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> &b)</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-keyword">if</span>(a.size() < b.size()) swap(a, b);</span><br><span class="line">    <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> u : b) a.pb(u);</span><br><span class="line">}</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">int</span> <span class="hljs-title">main</span><span class="hljs-params">()</span></span></span><br><span class="line"><span class="hljs-function"></span>{</span><br><span class="line">    <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &t);</span><br><span class="line">    <span class="hljs-keyword">while</span>(t--) {</span><br><span class="line">        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>, &n, &m);</span><br><span class="line">        init();</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">1</span>; i <= m; ++i) {</span><br><span class="line">            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d%d"</span>, &x, &y);</span><br><span class="line">            v[x].pb(y);</span><br><span class="line">            v[y].pb(x);</span><br><span class="line">        }</span><br><span class="line">        <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &q);</span><br><span class="line">        <span class="hljs-keyword">while</span>(q--) {</span><br><span class="line">            <span class="hljs-keyword">int</span> u;</span><br><span class="line">            <span class="hljs-built_in">scanf</span>(<span class="hljs-string">"%d"</span>, &u);</span><br><span class="line">            <span class="hljs-keyword">if</span>(u != pre[u]) <span class="hljs-keyword">continue</span>;</span><br><span class="line">            <span class="hljs-built_in">vector</span><<span class="hljs-keyword">int</span>> g = v[u];</span><br><span class="line">            v[u].clear();</span><br><span class="line">            <span class="hljs-keyword">for</span>(<span class="hljs-keyword">auto</span> &x : g) {</span><br><span class="line">                <span class="hljs-keyword">int</span> fa = findPre(x);</span><br><span class="line">                <span class="hljs-keyword">if</span>(fa == u) <span class="hljs-keyword">continue</span>;</span><br><span class="line">                uni(v[u], v[fa]);</span><br><span class="line">                pre[fa] = u;</span><br><span class="line">            }</span><br><span class="line">        }</span><br><span class="line">        <span class="hljs-keyword">for</span>(<span class="hljs-keyword">int</span> i = <span class="hljs-number">0</span>; i < n; ++i) <span class="hljs-built_in">printf</span>(<span class="hljs-string">"%d "</span>, findPre(i));</span><br><span class="line">        <span class="hljs-built_in">puts</span>(<span class="hljs-string">""</span>);</span><br><span class="line">    }</span><br><span class="line">}</span><br></pre></td></tr></tbody></table></figure>
-</body></html>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -975,7 +1041,7 @@
                         Posts
                     </p>
                     <p class="title has-text-weight-normal">
-                        16
+                        18
                     </p>
                 </div>
             </div>
@@ -985,7 +1051,7 @@
                         Categories
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        9
                     </p>
                 </div>
             </div>
@@ -995,7 +1061,7 @@
                         Tags
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        8
                     </p>
                 </div>
             </div>
@@ -1077,6 +1143,14 @@
                 <span class="level-item tag">4</span>
             </span>
         </a></li><li>
+        <a class="level is-marginless" href="/categories/C/">
+            <span class="level-start">
+                <span class="level-item">C++</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
         <a class="level is-marginless" href="/categories/Client/">
             <span class="level-start">
                 <span class="level-item">Client</span>
@@ -1130,7 +1204,7 @@
                 <span class="level-item">artical</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li>
             </ul>
@@ -1143,7 +1217,7 @@
         <h3 class="menu-label">
             Tag Cloud
         </h3>
-        <a href="/tags/Algorithm/" style="font-size: 20px;">Algorithm</a> <a href="/tags/Dynamic-programming/" style="font-size: 10px;">Dynamic programming</a> <a href="/tags/Environment-configuration/" style="font-size: 10px;">Environment configuration</a> <a href="/tags/JS/" style="font-size: 10px;">JS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Redis/" style="font-size: 10px;">Redis</a> <a href="/tags/electron/" style="font-size: 10px;">electron</a>
+        <a href="/tags/Algorithm/" style="font-size: 20px;">Algorithm</a> <a href="/tags/C/" style="font-size: 10px;">C++</a> <a href="/tags/Dynamic-programming/" style="font-size: 10px;">Dynamic programming</a> <a href="/tags/Environment-configuration/" style="font-size: 10px;">Environment configuration</a> <a href="/tags/JS/" style="font-size: 10px;">JS</a> <a href="/tags/MapReduce/" style="font-size: 10px;">MapReduce</a> <a href="/tags/Redis/" style="font-size: 15px;">Redis</a> <a href="/tags/electron/" style="font-size: 10px;">electron</a>
     </div>
 </div>
     
@@ -1155,6 +1229,44 @@
         <h3 class="menu-label">
             Recent
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/11/21/Gotw1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Gotw1">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-11-21T13:29:07.000Z">2021-11-21</time></div>
+                    <a href="/2021/11/21/Gotw1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Gotw1</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/C/">C++</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Redis数据类型：map">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-10T05:50:31.000Z">2021-02-10</time></div>
+                    <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Redis数据类型：map</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/artical/">artical</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1213,44 +1325,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/09/17/electron-ipcMain-md/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="electron-ipcMain.md">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-17T10:47:59.000Z">2020-09-17</time></div>
-                    <a href="/2020/09/17/electron-ipcMain-md/" class="title has-link-black-ter is-size-6 has-text-weight-normal">electron-ipcMain.md</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Client/">Client</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="嵌套函数和闭包">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-15T08:37:30.000Z">2020-09-15</time></div>
-                    <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="title has-link-black-ter is-size-6 has-text-weight-normal">嵌套函数和闭包</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web/">Web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
         
@@ -1263,12 +1337,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2021/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2021/02/">
                 <span class="level-start">
                     <span class="level-item">February 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1349,6 +1434,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/C/">
+                        <span class="tag">C++</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Dynamic-programming/">
                         <span class="tag">Dynamic programming</span>
                         <span class="tag is-grey">1</span>
@@ -1379,7 +1471,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Redis/">
                         <span class="tag">Redis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -1415,6 +1507,44 @@
         
         <article class="media">
             
+            <a href="/2021/11/21/Gotw1/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Gotw1">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-11-21T13:29:07.000Z">2021-11-21</time></div>
+                    <a href="/2021/11/21/Gotw1/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Gotw1</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/C/">C++</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Redis数据类型：map">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-02-10T05:50:31.000Z">2021-02-10</time></div>
+                    <a href="/2021/02/10/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Amap/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Redis数据类型：map</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/artical/">artical</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/02/09/Redis%E6%95%B0%E6%8D%AE%E7%B1%BB%E5%9E%8B%EF%BC%9Astring/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Redis数据类型：string">
@@ -1470,44 +1600,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2020/09/17/electron-ipcMain-md/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="electron-ipcMain.md">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-17T10:47:59.000Z">2020-09-17</time></div>
-                    <a href="/2020/09/17/electron-ipcMain-md/" class="title has-link-black-ter is-size-6 has-text-weight-normal">electron-ipcMain.md</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Client/">Client</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
-        <article class="media">
-            
-            <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="嵌套函数和闭包">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2020-09-15T08:37:30.000Z">2020-09-15</time></div>
-                    <a href="/2020/09/15/%E5%B5%8C%E5%A5%97%E5%87%BD%E6%95%B0%E5%92%8C%E9%97%AD%E5%8C%85/" class="title has-link-black-ter is-size-6 has-text-weight-normal">嵌套函数和闭包</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web/">Web</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
     
@@ -1520,12 +1612,23 @@
         <ul class="menu-list">
         
         <li>
+            <a class="level is-marginless" href="/archives/2021/11/">
+                <span class="level-start">
+                    <span class="level-item">November 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
             <a class="level is-marginless" href="/archives/2021/02/">
                 <span class="level-start">
                     <span class="level-item">February 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -1606,6 +1709,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/C/">
+                        <span class="tag">C++</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/Dynamic-programming/">
                         <span class="tag">Dynamic programming</span>
                         <span class="tag is-grey">1</span>
@@ -1636,7 +1746,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/Redis/">
                         <span class="tag">Redis</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
